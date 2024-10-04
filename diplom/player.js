@@ -14,7 +14,14 @@ const menuBtn = document.querySelector(".menu-btn"),
   nextBtn = document.querySelector("#next"),
   prevBtn = document.querySelector("#prev"),
   shuffleBtn = document.querySelector("#shuffle"),
-  repeatBtn = document.querySelector("#repeat");
+  repeatBtn = document.querySelector("#repeat"),
+  searchBtn = document.querySelector('.search-btn'),
+  searchInput = document.querySelector('.search-input'),
+  volumeControl = document.querySelector('#volume-control'),
+  volumePercentage = document.querySelector('#volume-percentage');
+const baseAudioPath = "data/audio/";
+const baseImagePath = "data/image/";
+  
 
 // Змінні для стану програвача
 let playing = false, 
@@ -23,12 +30,39 @@ let playing = false,
   repeat = 0, 
   favourites = [], 
   audio = new Audio(); 
+  audio.volume = volumeControl.value;
+  volumePercentage.innerText = `${Math.floor(volumeControl.value * 100)}%`;
 
 // Список пісень
 const songs = [
-  { title: "song 1", artist: "artist 1", img_src: "song.png", src: "song1.mp3" },
+  { title: "song 1", artist: "artist 1", img_src: "people.jpg", src: "song1.mp3" },
   { title: "song 2", artist: "artist 2", img_src: "song2.png", src: "song2.mp3" }
 ];
+
+// Обновление процентов при изменении громкости
+volumeControl.addEventListener('input', () => {
+  const volumeValue = Math.floor(volumeControl.value * 100);
+  volumePercentage.innerText = `${volumeValue}%`;
+  audio.volume = volumeControl.value;
+});
+
+// Функция для поиска песен
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.toLowerCase();
+  const filteredSongs = songs.filter(song => song.title.toLowerCase().includes(query));
+  updatePlaylist(filteredSongs);
+});
+
+// Обработчик клика по иконке поиска
+searchBtn.addEventListener('click', () => {
+  // Если поле поиска скрыто, покажем его, если видно - скроем
+  if (searchInput.style.display === 'none' || !searchInput.style.display) {
+    searchInput.style.display = 'inline-block';
+    searchInput.focus();  // Сразу фокусируем на поле поиска
+  } else {
+    searchInput.style.display = 'none';
+  }
+});
 
 // Обробник кліку по кнопці меню (відкриває/закриває програвач)
 menuBtn.addEventListener("click", () => container.classList.toggle("active"));
@@ -42,12 +76,12 @@ function init() {
 // Оновлення плейлиста
 function updatePlaylist(songs) {
   playlistContainer.innerHTML = songs.map((song, index) => `
-    <tr class="song">
-      <td class="no"><h5>${index + 1}</h5></td>
-      <td class="title"><h6>${song.title}</h6></td>
-      <td class="length"><h5>2:03</h5></td>
-      <td><i class="fas fa-heart ${favourites.includes(index) ? "active" : ""}"></i></td>
-    </tr>
+  <tr class="song">
+    <td class="no"><h5>${index + 1}</h5></td>
+    <td class="title"><h6>${song.title}</h6></td>
+    <td class="length"><h5>2:03</h5></td>
+    <td><i class="fas fa-heart ${favourites.includes(index) ? "active" : ""}"></i></td>
+  </tr>
 `).join("");
 
   // Додаємо події для кожного рядка пісні в плейлисті
@@ -69,10 +103,10 @@ function updatePlaylist(songs) {
     });
 
     // Визначення тривалості кожної пісні
-    const audioForDuration = new Audio(`image/${songs[index].src}`);
+    const audioForDuration = new Audio(`${baseAudioPath}${songs[index].src}`);
     audioForDuration.addEventListener("loadedmetadata", () => {
       const duration = formatTime(audioForDuration.duration);
-      tr.querySelector(".length h5").innerText = duration;
+        tr.querySelector(".length h5").innerText = duration;
     });
   });
 }
@@ -88,8 +122,8 @@ function formatTime(time) {
 function loadSong(num) {
   infoWrapper.innerHTML = `<h2>${songs[num].title}</h2><h3>${songs[num].artist}</h3>`;
   currentSongTitle.innerHTML = songs[num].title;
-  coverImage.style.backgroundImage = `url(image/${songs[num].img_src})`;
-  audio.src = `image/${songs[num].src}`;
+  coverImage.style.backgroundImage = `url(data/image/${songs[num].img_src})`;
+  audio.src = `${baseAudioPath}${songs[num].src}`;
   currentFavourite.classList.toggle("active", favourites.includes(num));
 }
 
@@ -193,4 +227,13 @@ progressBar.addEventListener("click", (e) => {
   const clickX = e.offsetX;
   audio.currentTime = (clickX / width) * audio.duration;
 });
+
+function init() {
+  updatePlaylist(songs); // Оновлює плейлист на основі списку пісень
+  loadSong(currentSong); // Завантажує першу пісню
+  audio.volume = volumeControl.value; // Устанавливаем начальную громкость
+  volumePercentage.innerText = `${Math.floor(volumeControl.value * 100)}%`; // Отображаем проценты
+}
+
+
 init();

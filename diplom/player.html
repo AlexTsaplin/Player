@@ -13,11 +13,11 @@
 	<title>YouPlayer</title>
 </head>
 <body>
-
 	<div class="container">
 		<div class="top">
 			<i class="fas fa-bars menu-btn"></i>
-			<i class="fas fa-search"></i>
+			<input type="text" class="search-input" placeholder="Search song...">
+			<i class="fas fa-search search-btn"></i>
 		</div>
 
 		<div class="cover-image"></div>
@@ -66,11 +66,14 @@
 			<i class="fas fa-random" id="shuffle"></i>
 			<i class="fas fa-repeat" id="repeat"></i>
 			<i class="fas fa-gear" id="options"></i>
+			<input type="range" id="volume-control" min="0" max="1" step="0.01" value="1">
+			<span id="volume-percentage">100%</span>
 		</div>
 
 		<p class="current-song-title">song title</p>
 	</div>
 
 <script src="player.js"></script>
+
 </body>
 </html>
