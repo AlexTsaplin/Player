@@ -72,11 +72,13 @@ i:active {
 }
 
 .search-btn {
-    display: none; /* Скрыть значок поиска по умолчанию */
+    display: none; /* Hide search icon by default */
+    margin: 0; /* Убираем отступы, чтобы избежать смещения */
+    padding: 0; /* Убираем отступы, чтобы избежать смещения */
 }
 
 .container.active .search-btn {
-    display: inline; /* Показать значок поиска, когда контейнер активен */
+    display: inline-block; /* Show search icon when container is active */
 }
 
 .cover-image {
@@ -92,14 +94,14 @@ i:active {
     transition: all 0.3s ease-in;
 }
 
-.container.active .cover-image{
+.container.active .cover-image {
     transform: scale(0.251);
     left: 23px;
     top: 60px;
     border-radius: 20px;
 }
 
-.player-body{
+.player-body {
     position: absolute;
     top: 366px;
     left: 0;
@@ -111,7 +113,6 @@ i:active {
 
 .container.active .player-body {
     height: 470px;
-    left: 0;
     top: 180px;
 }
 
@@ -139,6 +140,7 @@ i:active {
     width: 100%;
     border-spacing: 0px 2px;
 }
+
 .list tr {
     height: 50px;
     text-align: center;
@@ -146,16 +148,19 @@ i:active {
     text-indent: 8px;
     transform-origin: 0% 50%;
 }
+
 .list tr:hover {
     background-color: #222;
     cursor: pointer;
 }
-.list .title{
+
+.list .title {
     width: 215px;
     text-align: left;
     text-indent: 15px;
     transition: all 0.3s;
 }
+
 .list tr:hover .title {
     padding-left: 5px;
     width: 210px;
@@ -181,10 +186,12 @@ i:active {
     text-align: center;
     transition: all 0.3s;
 }
+
 .info h2 {
     font-size: 16px;
     margin-bottom: 5px;
 }
+
 .info h3 {
     font-size: 10px;
     color: #6d6d6d;
@@ -211,12 +218,12 @@ i:active {
     z-index: 10;
     transition: all 0.3s;
 }
+
 .controls #playpause {
     font-size: 40px;
 }
 
 .container.active .controls {
-    position: absolute;
     width: 216px;
     bottom: 4px;
     left: -44px;
@@ -226,11 +233,10 @@ i:active {
 .more-controls {
     color: #6d6d6d;
     font-size: 15px;
-    height: 45px;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     padding: 0 20px;
     position: absolute;
     bottom: 10px;
@@ -243,14 +249,14 @@ i:active {
     bottom: -60px;
 }
 
-.fa-heart.active {
-    color: red; 
-}
-.fa-random.active {
-    color: #106f9b;
-}
+.fa-heart.active,
+.fa-random.active,
 .fa-repeat.active {
     color: #106f9b;
+}
+
+.fa-heart.active {
+    color: red;
 }
 
 .bar {
@@ -260,15 +266,13 @@ i:active {
     top: 580px;
     left: 23px;
     cursor: pointer;
-    transform-origin: 0% 0%;
     background-color: #fff;
     transition: all 0.3s;
 }
 
 .container.active .bar {
-    top: 119px;
-    left: 126px;
-    color: #111;
+    top: 120px;
+    left: 85px;
     background-color: #111;
     transform: scale(0.6875);
 }
@@ -291,7 +295,6 @@ i:active {
     position: absolute;
     top: -20px;
     left: 0;
-    user-select: none;
     font-size: 10px;
     display: flex;
     align-items: center;
@@ -306,29 +309,15 @@ i:active {
     border: none;
     border-radius: 20px;
     outline: none;
-    display: none; 
+    display: none;
 }
 
 .container.active .search-input {
     display: inline-block;
 }
 
-.search-input .active {
-    width: 200px;
-    padding: 5px 10px;
-    font-size: 14px;
-    border: none;
-    border-radius: 20px;
-    outline: none;
-    display: none; 
-}
-
-.container .top .search-input {
-    display: none;
-}
-
 #volume-control {
-    width: 100px; /* Задаем фиксированную ширину */
+    width: 100px;
     margin-left: 10px;
     cursor: pointer;
     appearance: none;
@@ -336,21 +325,6 @@ i:active {
     height: 4px;
     border-radius: 5px;
     outline: none;
-    transition: none;
-}
-
-#volume-percentage {
-    margin-left: 10px;
-    font-size: 14px;
-    color: #fff;
-    min-width: 40px; 
-    text-align: right;
-    transition: none;
-}
-
-#volume-control, #volume-percentage {
-    transition: none;
-    width: 100px;
 }
 
 #volume-control::-webkit-slider-thumb {
@@ -361,21 +335,14 @@ i:active {
     background-color: var(--primary-color);
     cursor: pointer;
 }
-#volume-control:hover {
-    background-color: #bbb;
-}
 
-.more-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%; /* или фиксированное значение */
-    padding: 0 20px;
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    z-index: 20;
-    transition: all 0.3s;
+#volume-percentage {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #fff;
+    min-width: 40px;
+    text-align: right;
+    transition: none;
 }
 
 .container.active #volume-percentage {

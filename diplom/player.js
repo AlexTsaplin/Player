@@ -19,9 +19,9 @@ const menuBtn = document.querySelector(".menu-btn"),
   searchInput = document.querySelector('.search-input'),
   volumeControl = document.querySelector('#volume-control'),
   volumePercentage = document.querySelector('#volume-percentage');
+
 const baseAudioPath = "data/audio/";
 const baseImagePath = "data/image/";
-  
 
 // Змінні для стану програвача
 let playing = false, 
@@ -30,70 +30,81 @@ let playing = false,
   repeat = 0, 
   favourites = [], 
   audio = new Audio(); 
-  audio.volume = volumeControl.value;
-  volumePercentage.innerText = `${Math.floor(volumeControl.value * 100)}%`;
+audio.volume = volumeControl.value;
+volumePercentage.innerText = `${Math.floor(volumeControl.value * 100)}%`;
 
 // Список пісень
 const songs = [
   { title: "song 1", artist: "artist 1", img_src: "people.jpg", src: "song1.mp3" },
-  { title: "song 2", artist: "artist 2", img_src: "song2.png", src: "song2.mp3" }
+  { title: "song 2", artist: "artist 2", img_src: "song2.png", src: "song2.mp3" },
 ];
 
-// Обновление процентов при изменении громкости
-volumeControl.addEventListener('input', () => {
+// Функція для оновлення громкості
+function updateVolume() {
   const volumeValue = Math.floor(volumeControl.value * 100);
   volumePercentage.innerText = `${volumeValue}%`;
   audio.volume = volumeControl.value;
-});
+}
 
-// Функция для поиска песен
+// Обновление процентов при изменении громкости
+volumeControl.addEventListener('input', updateVolume);
+
+// Функція для пошуку пісень
 searchInput.addEventListener('input', () => {
   const query = searchInput.value.toLowerCase();
   const filteredSongs = songs.filter(song => song.title.toLowerCase().includes(query));
   updatePlaylist(filteredSongs);
 });
 
-// Обработчик клика по иконке поиска
+// Обробник кліка по іконці пошуку
 searchBtn.addEventListener('click', () => {
-  // Если поле поиска скрыто, покажем его, если видно - скроем
   if (searchInput.style.display === 'none' || !searchInput.style.display) {
     searchInput.style.display = 'inline-block';
-    searchInput.focus();  // Сразу фокусируем на поле поиска
+    searchInput.focus();
   } else {
     searchInput.style.display = 'none';
+    searchInput.value = '';
+    updatePlaylist(songs);
   }
 });
 
-// Обробник кліку по кнопці меню (відкриває/закриває програвач)
-menuBtn.addEventListener("click", () => container.classList.toggle("active"));
+// Обробник зміни стану контейнера
+menuBtn.addEventListener('click', () => {
+  container.classList.toggle('active');
+
+  // Якщо контейнер стає неактивним, приховуємо поле пошуку
+  if (!container.classList.contains('active')) {
+    searchInput.style.display = 'none';
+    searchInput.value = '';
+    updatePlaylist(songs);
+  }
+});
 
 // Ініціалізація програвача
 function init() {
-  updatePlaylist(songs); // Оновлює плейлист на основі списку пісень
-  loadSong(currentSong); // Завантажує першу пісню
+  updatePlaylist(songs);
+  loadSong(currentSong);
 }
 
 // Оновлення плейлиста
 function updatePlaylist(songs) {
   playlistContainer.innerHTML = songs.map((song, index) => `
-  <tr class="song">
-    <td class="no"><h5>${index + 1}</h5></td>
-    <td class="title"><h6>${song.title}</h6></td>
-    <td class="length"><h5>2:03</h5></td>
-    <td><i class="fas fa-heart ${favourites.includes(index) ? "active" : ""}"></i></td>
-  </tr>
-`).join("");
+    <tr class="song">
+      <td class="no"><h5>${index + 1}</h5></td>
+      <td class="title"><h6>${song.title}</h6></td>
+      <td class="length"><h5>2:03</h5></td>
+      <td><i class="fas fa-heart ${favourites.includes(index) ? "active" : ""}"></i></td>
+    </tr>
+  `).join("");
 
   // Додаємо події для кожного рядка пісні в плейлисті
   document.querySelectorAll(".song").forEach((tr, index) => {
     tr.addEventListener("click", (e) => {
-      // Якщо клік по значку улюбленого, додаємо/видаляємо з улюблених
       if (e.target.classList.contains("fa-heart")) {
         addToFavourites(index);
         e.target.classList.toggle("active");
         return;
       }
-      // В іншому випадку, програємо вибрану пісню
       currentSong = index;
       loadSong(currentSong);
       audio.play();
@@ -102,11 +113,10 @@ function updatePlaylist(songs) {
       playing = true;
     });
 
-    // Визначення тривалості кожної пісні
     const audioForDuration = new Audio(`${baseAudioPath}${songs[index].src}`);
     audioForDuration.addEventListener("loadedmetadata", () => {
       const duration = formatTime(audioForDuration.duration);
-        tr.querySelector(".length h5").innerText = duration;
+      tr.querySelector(".length h5").innerText = duration;
     });
   });
 }
@@ -143,8 +153,8 @@ playPauseBtn.addEventListener("click", togglePlayPause);
 
 // Функція для відтворення наступної пісні
 function nextSong() {
-  if (shuffle) shuffleFunc(); // Якщо ввімкнено shuffle, граємо випадкову пісню
-  currentSong = (currentSong + 1) % songs.length; // Перехід на наступну пісню
+  if (shuffle) shuffleFunc();
+  currentSong = (currentSong + 1) % songs.length;
   loadSong(currentSong);
   if (playing) audio.play();
 }
@@ -154,8 +164,8 @@ nextBtn.addEventListener("click", nextSong);
 
 // Функція для відтворення попередньої пісні
 function prevSong() {
-  if (shuffle) shuffleFunc(); // Якщо ввімкнено shuffle, граємо випадкову пісню
-  currentSong = (currentSong - 1 + songs.length) % songs.length; // Перехід на попередню пісню
+  if (shuffle) shuffleFunc();
+  currentSong = (currentSong - 1 + songs.length) % songs.length;
   loadSong(currentSong);
   if (playing) audio.play();
 }
@@ -181,9 +191,10 @@ currentFavourite.addEventListener("click", () => {
   addToFavourites(currentSong);
 });
 
-// Ввімкнення або вимкнення shuffle (випадкового відтворення)
+// Ввімкнення або вимкнення shuffle
 shuffleBtn.addEventListener("click", () => {
   shuffle = !shuffle;
+
   shuffleBtn.classList.toggle("active");
 });
 
@@ -194,20 +205,21 @@ function shuffleFunc() {
 
 // Обробник кліку для кнопки "повтор"
 repeatBtn.addEventListener("click", () => {
-  repeat = (repeat + 1) % 3;
+  repeat = (repeat + 1) % 2;
+  console.log("Repeat mode:", repeat);  // Додаємо повідомлення для відладки
   repeatBtn.classList.toggle("active", repeat > 0);
 });
 
 // Автоматичний перехід до наступної пісні після завершення поточної
 audio.addEventListener("ended", () => {
   if (repeat === 1) {
-    loadSong(currentSong); // Повтор поточної пісні
+    loadSong(currentSong);
     audio.play();
   } else if (repeat === 2) {
-    nextSong(); // Перехід до наступної пісні з повтором плейлиста
+    nextSong();
     audio.play();
   } else {
-    nextSong(); // Перехід до наступної пісні без повтору
+    nextSong();
   }
 });
 
@@ -228,12 +240,5 @@ progressBar.addEventListener("click", (e) => {
   audio.currentTime = (clickX / width) * audio.duration;
 });
 
-function init() {
-  updatePlaylist(songs); // Оновлює плейлист на основі списку пісень
-  loadSong(currentSong); // Завантажує першу пісню
-  audio.volume = volumeControl.value; // Устанавливаем начальную громкость
-  volumePercentage.innerText = `${Math.floor(volumeControl.value * 100)}%`; // Отображаем проценты
-}
-
-
+// Ініціалізація програвача
 init();
