@@ -46,6 +46,7 @@ function updateVolume() {
   audio.volume = volumeControl.value;
 }
 
+
 // Обновление процентов при изменении громкости
 volumeControl.addEventListener('input', updateVolume);
 
