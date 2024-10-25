@@ -19,6 +19,12 @@ const menuBtn = document.querySelector(".menu-btn"),
   searchInput = document.querySelector('.search-input'),
   volumeControl = document.querySelector('#volume-control'),
   volumePercentage = document.querySelector('#volume-percentage');
+  optionBtn = document.querySelector('#option');
+  trackInfoModal = document.querySelector('#trackInfoModal');
+  closeTrackInfoBtn = document.querySelector('#closeTrackInfo');
+  trackTitle = document.querySelector('.track-title');
+  trackArtist = document.querySelector('.track-artist');
+  trackCover = document.querySelector('.track-cover');
 
 const baseAudioPath = "data/audio/";
 const baseImagePath = "data/image/";
@@ -35,9 +41,39 @@ volumePercentage.innerText = `${Math.floor(volumeControl.value * 100)}%`;
 
 // Список пісень
 const songs = [
-  { title: "song 1", artist: "artist 1", img_src: "people.jpg", src: "song1.mp3" },
-  { title: "song 2", artist: "artist 2", img_src: "song2.png", src: "song2.mp3" },
+  { title: "STRESSED OUT", artist: "Twenty One Pilots ", img_src: "twentyp.gif", src: "Twenty One Pilots - Stressed Out.mp3" },
+  { title: "Hello", artist: "Tricky Nicki feat. Talberg", img_src: "hello.jpg", src: "Tricky Nicki - Hello feat. Talberg.mp3" },
+  { title: "SWISH", artist: "Tyga", img_src: "Swish.jpg", src: "Tyga - SWISH.mp3" },
+  { title: "Without Me", artist: "Eminem", img_src: "Eminem.jpg", src: "Eminem - Without Me.mp3" },
+  { title: "Ride for Ukraine", artist: "Tricky Nicki", img_src: "Ukraine.jpg", src: "Ride-for-Ukraine.mp3" },
+  { title: "Party", artist: "Kaef x Tricky Nicki", img_src: "party.jpg", src: "Kaef-Tricky Nicki.mp3" },
+  { title: "КРУЗАК", artist: "SKOFKA", img_src: "kruzak.jpg", src: "Skofka - Крузак.mp3" },
+  { title: "Таксі", artist: "KALUSH ft. Христина Соловій", img_src: "taxi.png", src: "taxi.mp3" },
+  { title: "Smack That", artist: "Akon ft. Eminem", img_src: "akon.jpg", src: "Akon Feat. Eminem - Smack That.mp3" },
 ];
+
+
+
+// Функция для открытия окна с информацией о треке
+function openTrackInfo() {
+  trackInfoModal.style.display = 'block';
+  setTimeout(() => trackInfoModal.style.opacity = '1', 0); // Плавное появление
+  trackTitle.innerText = songs[currentSong].title;
+  trackArtist.innerText = songs[currentSong].artist;
+  trackCover.style.backgroundImage = `url(${baseImagePath}${songs[currentSong].img_src})`;
+}
+
+// Функция для закрытия окна с информацией о треке
+function closeTrackInfo() {
+  trackInfoModal.style.opacity = '0'; // Плавное исчезновение
+  setTimeout(() => trackInfoModal.style.display = 'none', 300); // Скрыть после завершения анимации
+}
+
+// Обработчик клика по кнопке опций
+optionBtn.addEventListener('click', openTrackInfo);
+
+// Обработчик клика по стрелочке для закрытия окна
+closeTrackInfoBtn.addEventListener('click', closeTrackInfo);
 
 // Функція для оновлення громкості
 function updateVolume() {

@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,400italic,500italic,600italic,700italic,800italic,900italic);
 
 :root {
-    --primary-color: #15a6e9;
+    --primary-color: #ff564c;
 }
 
 ::-webkit-scrollbar {
@@ -41,7 +41,7 @@ body {
     position: relative;
     overflow: hidden;
     border-radius: 10px;
-    background: #c4dfe6;
+    background: #be9d9d;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
 }
 
@@ -263,14 +263,26 @@ i:active {
     bottom: -60px;
 }
 
+.fa-heart.active {
+    color: #ff564c;
+}
 .fa-heart.active,
 .fa-random.active,
 .fa-repeat.active {
-    color: #106f9b;
+    color: #ff564c;
 }
-
-.fa-heart.active {
-    color: red;
+.container.active .fa-heart:hover,
+.menu-btn:hover,
+.search-btn:hover,
+#closeTrackInfo:hover,
+#prev:hover,
+#playpause:hover,
+#next:hover,
+#current-favourite:hover,
+#shuffle:hover,
+#repeat:hover,
+#option:hover {
+    color: #ff564c; /* Цвет при наведении */
 }
 
 .bar {
@@ -348,3 +360,75 @@ i:active {
 .container.active #volume-percentage {
     color: #111;
 }
+
+/*Інформація про пісню*/
+.track-info-modal {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8); 
+    color: white; 
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: opacity 0.3s; 
+  }
+  
+  .track-info-content {
+    padding: 20px;
+    height: 650px;
+  }
+  
+  .close-btn {
+    font-size: 18px; 
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+  }
+  
+  .track-info-details {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .track-cover {
+    width: 140px;
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    margin-right: 15px;
+    margin-top: 15px;
+}
+  
+  .track-details h2, .track-details h3 {
+    margin: 0;
+  }
+  
+  .track-info-actions {
+    margin-top: 15px;
+  }
+  
+  .action-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.2); 
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s; 
+    border-radius: 7px;
+  }
+  
+  .action-btn:hover {
+    background-color: rgba(255, 255, 255, 0.4); 
+  }
+  
+
+/* Menu */

@@ -14,6 +14,10 @@
 </head>
 <body>
 	<div class="container">
+
+		
+
+
 		<div class="top">
 			<i class="fas fa-bars menu-btn" style="padding: 4px;"></i>
 			<input type="text" class="search-input" placeholder="Search song..." style="display: none;">
@@ -42,6 +46,25 @@
 			</table>
 		</div>
 
+		<div class="track-info-modal" id="trackInfoModal" style="display: none;">
+			<div class="track-info-content">
+				<i class="fas fa-arrow-left close-btn" id="closeTrackInfo"></i>
+			  <div class="track-info-details">
+				<div class="track-cover"></div>
+				<div class="track-details">
+				  <h4 class="track-title">Song Title</h2>
+				  <h5 class="track-artist">Artist</h3>
+				</div>
+			  </div>
+			  <div class="track-info-actions">
+				<button class="action-btn">Додати до плейлисту</button>
+				<button class="action-btn">Переглянути артиста</button>
+				<button class="action-btn">Переглянути альбом</button>
+				<button class="action-btn">Поширити</button>
+			  </div>
+			</div>
+		  </div>
+
 		<div class="bar">
 			<div class="dot"></div>
 			<div class="time">
@@ -65,7 +88,7 @@
 			<i class="fas fa-heart" id="current-favourite"></i>
 			<i class="fas fa-random" id="shuffle"></i>
 			<i class="fas fa-repeat" id="repeat"></i>
-			<i class="fas fa-gear" id="options"></i>
+			<i class="fa-solid fa-ellipsis" id="option"></i>
 			<input type="range" id="volume-control" min="0" max="1" step="0.01" value="1">
 			<span id="volume-percentage">100%</span>
 		</div>
