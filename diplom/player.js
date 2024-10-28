@@ -41,18 +41,22 @@ volumePercentage.innerText = `${Math.floor(volumeControl.value * 100)}%`;
 
 // Список пісень
 const songs = [
-  { title: "STRESSED OUT", artist: "Twenty One Pilots ", img_src: "twentyp.gif", src: "Twenty One Pilots - Stressed Out.mp3" },
-  { title: "Hello", artist: "Tricky Nicki feat. Talberg", img_src: "hello.jpg", src: "Tricky Nicki - Hello feat. Talberg.mp3" },
-  { title: "SWISH", artist: "Tyga", img_src: "Swish.jpg", src: "Tyga - SWISH.mp3" },
-  { title: "Without Me", artist: "Eminem", img_src: "Eminem.jpg", src: "Eminem - Without Me.mp3" },
-  { title: "Ride for Ukraine", artist: "Tricky Nicki", img_src: "Ukraine.jpg", src: "Ride-for-Ukraine.mp3" },
-  { title: "Party", artist: "Kaef x Tricky Nicki", img_src: "party.jpg", src: "Kaef-Tricky Nicki.mp3" },
-  { title: "КРУЗАК", artist: "SKOFKA", img_src: "kruzak.jpg", src: "Skofka - Крузак.mp3" },
-  { title: "Таксі", artist: "KALUSH ft. Христина Соловій", img_src: "taxi.png", src: "taxi.mp3" },
-  { title: "Smack That", artist: "Akon ft. Eminem", img_src: "akon.jpg", src: "Akon Feat. Eminem - Smack That.mp3" },
+  { id: 0, title: "STRESSED OUT", artist: "Twenty One Pilots ", img_src: "twentyp.gif", src: "Twenty One Pilots - Stressed Out.mp3" },
+  { id: 1, title: "Hello", artist: "Tricky Nicki feat. Talberg", img_src: "hello.jpg", src: "Tricky Nicki - Hello feat. Talberg.mp3" },
+  { id: 2,title: "SWISH", artist: "Tyga", img_src: "Swish.jpg", src: "Tyga - SWISH.mp3" },
+  { id: 3,title: "Without Me", artist: "Eminem", img_src: "Eminem.jpg", src: "Eminem - Without Me.mp3" },
+  { id: 4,title: "Ride for Ukraine", artist: "Tricky Nicki", img_src: "Ukraine.jpg", src: "Ride-for-Ukraine.mp3" },
+  { id: 5,title: "Party", artist: "Kaef x Tricky Nicki", img_src: "party.jpg", src: "Kaef-Tricky Nicki.mp3" },
+  { id: 6,title: "КРУЗАК", artist: "SKOFKA", img_src: "kruzak.jpg", src: "Skofka - Крузак.mp3" },
+  { id: 7,title: "Таксі", artist: "KALUSH ft. Христина Соловій", img_src: "taxi.png", src: "taxi.mp3" },
+  { id: 8,title: "Smack That", artist: "Akon ft. Eminem", img_src: "akon.jpg", src: "Akon Feat. Eminem - Smack That.mp3" },
+  { id: 9,title: "OK", artist: "Tricky Nicki ft. Freaky Siren", img_src: "OK.jpg", src: "OK - Tricky Nicki ft. Freaky Siren.mp3" },
+  { id: 10,title: "Later Bitches", artist: "The Prince Karma", img_src: "later.jpg", src: "the-prince-karma-later-bitches.mp3" },
+  { id: 11,title: "Keep Their Heads Ringin'", artist: "Dr. Dre", img_src: "dr.jpg", src: "Keep Their Heads Ringin.mp3" },
+  { id: 12,title: "Shake That", artist: "Eminem ft. Nate Dogg", img_src: "shakethat.jpg", src: "Shake That.mp3" },
+  { id: 13,title: "Порічка", artist: "YAKTAK x KOLA", img_src: "yaktakkola.jpg", src: "Yaktak feat. Kola - Порічка.mp3" },
+  { id: 14,title: "Delirious (Boneless)", artist: "Steve Aoki & Chris Lake  Tujamo ft. Kid Ink", img_src: "aokilaketujamo.jpg", src: "Steve Aoki & Chris Lake feat. Kid Ink & Tujamo - Delirious (Boneless).mp3" },
 ];
-
-
 
 // Функция для открытия окна с информацией о треке
 function openTrackInfo() {
@@ -81,7 +85,6 @@ function updateVolume() {
   volumePercentage.innerText = `${volumeValue}%`;
   audio.volume = volumeControl.value;
 }
-
 
 // Обновление процентов при изменении громкости
 volumeControl.addEventListener('input', updateVolume);
@@ -114,6 +117,8 @@ menuBtn.addEventListener('click', () => {
     searchInput.style.display = 'none';
     searchInput.value = '';
     updatePlaylist(songs);
+  } else {
+    updatePlaylist(songs);
   }
 });
 
@@ -127,7 +132,7 @@ function init() {
 function updatePlaylist(songs) {
   playlistContainer.innerHTML = songs.map((song, index) => `
     <tr class="song">
-      <td class="no"><h5>${index + 1}</h5></td>
+      <td class="no"><h5>${song.id}</h5></td>
       <td class="title"><h6>${song.title}</h6></td>
       <td class="length"><h5>2:03</h5></td>
       <td><i class="fas fa-heart ${favourites.includes(index) ? "active" : ""}"></i></td>
@@ -142,12 +147,17 @@ function updatePlaylist(songs) {
         e.target.classList.toggle("active");
         return;
       }
-      currentSong = index;
-      loadSong(currentSong);
-      audio.play();
-      container.classList.remove("active");
-      playPauseBtn.classList.replace("fa-play", "fa-pause");
-      playing = true;
+      currentSong = songs[index].id;
+    loadSong(currentSong);
+    audio.play();
+    container.classList.remove("active");
+    playPauseBtn.classList.replace("fa-play", "fa-pause");
+    playing = true;
+
+    // Скрыть поле поиска и обновить плейлист
+    searchInput.style.display = 'none';
+    searchInput.value = '';
+    updatePlaylist(songs);
     });
 
     const audioForDuration = new Audio(`${baseAudioPath}${songs[index].src}`);
