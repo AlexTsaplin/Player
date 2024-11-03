@@ -13,12 +13,24 @@
 	<title>YouPlayer</title>
 </head>
 <body>
-	<div class="container">
-		<div class="top">
-			<i class="fas fa-bars menu-btn" style="padding: 4px;"></i>
-			<input type="text" class="search-input" placeholder="Search song..." style="display: none;">
-			<i class="fas fa-search search-btn" style="padding: 4px;"></i>
-		</div>
+	<div class="container active">
+		<div class="main-menu active">
+			<img src="/data/image/YouPlayer.png" alt="YouPlayer Logo" class="menu-logo" style="width: 100%; height: 100%; padding-top: 20px;">
+			<ul class="menu-list">
+			   <li><button id="openPlayer">До програвача</button></li>
+			   <li><button>Список відтворення</button></li>
+			   <li><button>Улюблене</button></li>
+			   <li><button>Налаштування</button></li>
+			   <li><button>Про програму</button></li>
+			</ul>
+		 </div>
+
+		 <div class="player-content" style="display: none;">
+			<div class="top">
+			   <i class="fas fa-bars menu-btn" style="padding: 4px;"></i>
+			   <input type="text" class="search-input" placeholder="Search song..." style="display: none;">
+			   <i class="fas fa-search search-btn" style="padding: 4px;"></i>
+			</div>
 
 		<div class="cover-image"></div>
 		<div class="player-body"></div>
@@ -75,10 +87,12 @@
 		</div>
 
 		<div class="controls">
+			<button id="backToMenu" style="padding: 10px; background: none; border: 1px solid #fff; color: #fff; cursor: pointer;">Меню</button>
 			<i class="fas fa-backward" id="prev"></i>
 			<i class="fas fa-play" id="playpause"></i>
 			<i class="fas fa-forward" id="next"></i>
 		</div>
+		
 
 		<div class="more-controls">
 			<i class="fas fa-heart" id="current-favourite"></i>
@@ -93,6 +107,7 @@
 	</div>
 
 <script src="player.js"></script>
+
 
 </body>
 </html>

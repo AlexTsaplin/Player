@@ -1,37 +1,85 @@
-// Вибір усіх необхідних елементів DOM
-const menuBtn = document.querySelector(".menu-btn"),
-  container = document.querySelector(".container"),
-  progressBar = document.querySelector(".bar"),
-  progressDot = document.querySelector(".dot"),
-  currentTimeEl = document.querySelector(".current-time"),
-  durationEl = document.querySelector(".duration"),
-  playlistContainer = document.querySelector("#playlist"),
-  infoWrapper = document.querySelector(".info"),
-  coverImage = document.querySelector(".cover-image"),
-  currentSongTitle = document.querySelector(".current-song-title"),
-  currentFavourite = document.querySelector("#current-favourite"),
-  playPauseBtn = document.querySelector("#playpause"),
-  nextBtn = document.querySelector("#next"),
-  prevBtn = document.querySelector("#prev"),
-  shuffleBtn = document.querySelector("#shuffle"),
-  repeatBtn = document.querySelector("#repeat"),
-  searchBtn = document.querySelector('.search-btn'),
-  searchInput = document.querySelector('.search-input'),
-  volumeControl = document.querySelector('#volume-control'),
-  volumePercentage = document.querySelector('#volume-percentage');
-  optionBtn = document.querySelector('#option');
-  trackInfoModal = document.querySelector('#trackInfoModal');
-  closeTrackInfoBtn = document.querySelector('#closeTrackInfo');
-  trackTitle = document.querySelector('.track-title');
-  trackArtist = document.querySelector('.track-artist');
-  trackCover = document.querySelector('.track-cover');
+// Инициализация пустого списка песен
+let songs = [];
+let currentSong = 0; // Начинаем с первой песни
+
+// Функция для загрузки JSON с песнями
+function loadSongs() {
+  fetch('songs.json')
+    .then(response => {
+      if (!response.ok) throw new Error("Ошибка загрузки данных");
+      return response.json();
+    })
+    .then(data => {
+      songs = data;
+      if (songs.length > 0) {
+        init(); // Запускаем инициализацию только после загрузки песен
+      } else {
+        console.error('Список песен пуст');
+      }
+    })
+    .catch(error => console.error('Ошибка загрузки списка песен:', error));
+}
+
+// Инициализация плеера
+function init() {
+  updatePlaylist(songs);
+  loadSong(currentSong);
+}
+
+// Функция для загрузки песни
+function loadSong(num) {
+  if (!songs[num]) {  // Проверяем, существует ли песня с индексом num
+    return;
+  }
+  
+  infoWrapper.innerHTML = `<h2>${songs[num].title}</h2><h3>${songs[num].artist}</h3>`;
+  currentSongTitle.innerHTML = songs[num].title;
+  coverImage.style.backgroundImage = `url(data/image/${songs[num].img_src})`;
+  audio.src = `${baseAudioPath}${songs[num].src}`;
+  currentFavourite.classList.toggle("active", favourites.includes(num));
+}
+
+// Запускаем загрузку песен из JSON
+loadSongs();
+
+const playerContent = document.querySelector(".player-content");
+const openPlayerBtn = document.getElementById("openPlayer");
+const menuBtn = document.querySelector(".menu-btn");
+const backToMenuBtn = document.getElementById("backToMenu");
+const mainMenu = document.querySelector(".main-menu");
+const playerBody = document.querySelector(".player-body");
+const container = document.querySelector(".container");
+const progressBar = document.querySelector(".bar");
+const progressDot = document.querySelector(".dot");
+const currentTimeEl = document.querySelector(".current-time");
+const durationEl = document.querySelector(".duration");
+const playlistContainer = document.querySelector("#playlist");
+const infoWrapper = document.querySelector(".info");
+const coverImage = document.querySelector(".cover-image");
+const currentSongTitle = document.querySelector(".current-song-title");
+const currentFavourite = document.querySelector("#current-favourite");
+const playPauseBtn = document.querySelector("#playpause");
+const nextBtn = document.querySelector("#next");
+const prevBtn = document.querySelector("#prev");
+const shuffleBtn = document.querySelector("#shuffle");
+const repeatBtn = document.querySelector("#repeat");
+const searchBtn = document.querySelector('.search-btn');
+const searchInput = document.querySelector('.search-input');
+const volumeControl = document.querySelector('#volume-control');
+const volumePercentage = document.querySelector('#volume-percentage');
+const optionBtn = document.querySelector('#option');
+const trackInfoModal = document.querySelector('#trackInfoModal');
+const closeTrackInfoBtn = document.querySelector('#closeTrackInfo');
+const trackTitle = document.querySelector('.track-title');
+const trackArtist = document.querySelector('.track-artist');
+const trackCover = document.querySelector('.track-cover');
+
 
 const baseAudioPath = "data/audio/";
 const baseImagePath = "data/image/";
 
 // Змінні для стану програвача
 let playing = false, 
-  currentSong = 0, 
   shuffle = false, 
   repeat = 0, 
   favourites = [], 
@@ -39,24 +87,33 @@ let playing = false,
 audio.volume = volumeControl.value;
 volumePercentage.innerText = `${Math.floor(volumeControl.value * 100)}%`;
 
-// Список пісень
-const songs = [
-  { id: 0, title: "STRESSED OUT", artist: "Twenty One Pilots ", img_src: "twentyp.gif", src: "Twenty One Pilots - Stressed Out.mp3" },
-  { id: 1, title: "Hello", artist: "Tricky Nicki feat. Talberg", img_src: "hello.jpg", src: "Tricky Nicki - Hello feat. Talberg.mp3" },
-  { id: 2,title: "SWISH", artist: "Tyga", img_src: "Swish.jpg", src: "Tyga - SWISH.mp3" },
-  { id: 3,title: "Without Me", artist: "Eminem", img_src: "Eminem.jpg", src: "Eminem - Without Me.mp3" },
-  { id: 4,title: "Ride for Ukraine", artist: "Tricky Nicki", img_src: "Ukraine.jpg", src: "Ride-for-Ukraine.mp3" },
-  { id: 5,title: "Party", artist: "Kaef x Tricky Nicki", img_src: "party.jpg", src: "Kaef-Tricky Nicki.mp3" },
-  { id: 6,title: "КРУЗАК", artist: "SKOFKA", img_src: "kruzak.jpg", src: "Skofka - Крузак.mp3" },
-  { id: 7,title: "Таксі", artist: "KALUSH ft. Христина Соловій", img_src: "taxi.png", src: "taxi.mp3" },
-  { id: 8,title: "Smack That", artist: "Akon ft. Eminem", img_src: "akon.jpg", src: "Akon Feat. Eminem - Smack That.mp3" },
-  { id: 9,title: "OK", artist: "Tricky Nicki ft. Freaky Siren", img_src: "OK.jpg", src: "OK - Tricky Nicki ft. Freaky Siren.mp3" },
-  { id: 10,title: "Later Bitches", artist: "The Prince Karma", img_src: "later.jpg", src: "the-prince-karma-later-bitches.mp3" },
-  { id: 11,title: "Keep Their Heads Ringin'", artist: "Dr. Dre", img_src: "dr.jpg", src: "Keep Their Heads Ringin.mp3" },
-  { id: 12,title: "Shake That", artist: "Eminem ft. Nate Dogg", img_src: "shakethat.jpg", src: "Shake That.mp3" },
-  { id: 13,title: "Порічка", artist: "YAKTAK x KOLA", img_src: "yaktakkola.jpg", src: "Yaktak feat. Kola - Порічка.mp3" },
-  { id: 14,title: "Delirious (Boneless)", artist: "Steve Aoki & Chris Lake  Tujamo ft. Kid Ink", img_src: "aokilaketujamo.jpg", src: "Steve Aoki & Chris Lake feat. Kid Ink & Tujamo - Delirious (Boneless).mp3" },
-];
+// переход к плееру
+openPlayerBtn.addEventListener("click", () => {
+  mainMenu.style.display = "none"; 
+  playerContent.style.display = "block"; 
+  playerBody.style.display = "block";
+  container.classList.add("active");
+});
+
+//возвращение в меню
+backToMenuBtn.addEventListener("click", () => {
+  mainMenu.style.display = "block"; 
+
+  // Скрываем интерфейс плеера
+  playerContent.style.display = "none"; 
+  playerBody.style.display = "none"; 
+
+  // Снимаем класс active у контейнера
+  container.classList.remove('active');
+
+  // Скрываем поле поиска и обновляем плейлист
+  searchInput.style.display = 'none';
+  searchInput.value = '';
+  updatePlaylist(songs);
+});
+
+
+
 
 // Функция для открытия окна с информацией о треке
 function openTrackInfo() {
@@ -132,7 +189,7 @@ function init() {
 function updatePlaylist(songs) {
   playlistContainer.innerHTML = songs.map((song, index) => `
     <tr class="song">
-      <td class="no"><h5>${song.id}</h5></td>
+      <td class="no"><h5>${song.id + 1}</h5></td>
       <td class="title"><h6>${song.title}</h6></td>
       <td class="length"><h5>2:03</h5></td>
       <td><i class="fas fa-heart ${favourites.includes(index) ? "active" : ""}"></i></td>
@@ -173,15 +230,6 @@ function formatTime(time) {
   const minutes = Math.floor(time / 60);
   const seconds = String(Math.floor(time % 60)).padStart(2, '0');
   return `${minutes}:${seconds}`;
-}
-
-// Завантаження пісні
-function loadSong(num) {
-  infoWrapper.innerHTML = `<h2>${songs[num].title}</h2><h3>${songs[num].artist}</h3>`;
-  currentSongTitle.innerHTML = songs[num].title;
-  coverImage.style.backgroundImage = `url(data/image/${songs[num].img_src})`;
-  audio.src = `${baseAudioPath}${songs[num].src}`;
-  currentFavourite.classList.toggle("active", favourites.includes(num));
 }
 
 // Перемикання кнопки "відтворити/пауза"

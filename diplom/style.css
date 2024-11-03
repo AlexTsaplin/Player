@@ -43,6 +43,11 @@ body {
     border-radius: 10px;
     background: #be9d9d;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    
+}
+
+.container #backToMenu {
+    display: none;
 }
 
 i {
@@ -69,6 +74,10 @@ i:active {
 
 .container.active .top {
     color: #111;
+}
+
+.container.active #backToMenu {
+    display: inline-block;
 }
 
 .search-btn {
@@ -123,6 +132,7 @@ i:active {
     width: 100%;
     background-color: #111;
     transition: all 0.3s;
+    display: none;
 }
 
 .container.active .player-body {
@@ -432,3 +442,58 @@ i:active {
   
 
 /* Menu */
+.main-menu {
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    display: block; /* Изначально меню должно быть видимо */
+  position: relative; /* Или absolute, в зависимости от вашей структуры */
+  z-index: 10; /* Убедитесь, что меню поверх других элементов */
+ }
+ 
+ .main-menu h1 {
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+ }
+ 
+ .menu-list {
+    list-style: none;
+    padding: 0;
+    padding-top: 50px;
+ }
+ 
+ .menu-list li {
+    margin: 15px 0;
+ }
+ 
+ .menu-list button {
+    width: 200px; /* Установите фиксированную ширину для всех кнопок */
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    padding: 15px 0; /* Вертикальные отступы, горизонтальные отступы убраны */
+    font-size: 1.2rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    text-align: center; /* Центрирование текста внутри кнопки */
+    
+}
+
+ 
+ .menu-list button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+ }
+ 
+ .player-content {
+    display: none;
+  }
+ 
+ .player-content.active {
+    display: block;
+ }
+ 
+ 
+  
+
