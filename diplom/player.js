@@ -78,6 +78,93 @@ const trackCover = document.querySelector('.track-cover');
 const baseAudioPath = "data/audio/";
 const baseImagePath = "data/image/";
 
+// ТЕСТ ЛЮШЕРА //
+
+// Селекторы для элементов
+const openPlayerButton = document.getElementById("openPlayer");
+const luscherModal = document.getElementById("luscherModal");
+const closeLuscherModalButton = document.getElementById("closeLuscherModal");
+const colorButtons = document.querySelectorAll(".color-choice");
+const songListContainer = document.getElementById("song-list");
+const timerElement = document.getElementById("timer"); // Элемент для отображения таймера
+let luscherTimer; // Таймер для закрытия модального окна
+let interval; // Таймер для обратного отсчета
+
+// Функция запуска таймера
+function startLuscherTimer(duration) {
+    clearTimeout(luscherTimer); // Сбрасываем предыдущий таймер
+    clearInterval(interval); // Останавливаем обратный отсчёт, если он запущен
+
+    if (!timerElement) {
+        console.error("Таймер (timerElement) не найден в DOM.");
+        return;
+    }
+
+    let remainingTime = duration / 1000; // Преобразуем миллисекунды в секунды
+
+    // Обновляем текст таймера каждую секунду
+    interval = setInterval(() => {
+      if (remainingTime > 0) {
+          remainingTime--; // Сначала уменьшаем
+          timerElement.textContent = `${remainingTime} секунд залишилося`; // Потом отображаем
+      } else {
+          clearInterval(interval); // Останавливаем обратный отсчёт
+          timerElement.textContent = `0 секунд залишилося`; // Показываем 0, если время вышло
+      }
+  }, 1000);
+
+    // Устанавливаем таймер для закрытия окна
+    luscherTimer = setTimeout(() => {
+        clearInterval(interval); // Останавливаем обновление текста таймера
+        closeLuscherModal(); // Закрываем модальное окно
+    }, duration);
+}
+
+// Функция закрытия модального окна
+function closeLuscherModal() {
+    if (luscherModal) {
+        luscherModal.style.display = "none";
+    }
+    clearTimeout(luscherTimer); // Сбрасываем основной таймер
+    clearInterval(interval); // Сбрасываем таймер обратного отсчета
+}
+
+// Обработка выбора цвета
+colorButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        const selectedColor = button.getAttribute("data-color");
+        filterSongsByColor(selectedColor); // Фильтруем песни
+        closeLuscherModal(); // Закрываем модальное окно
+    });
+});
+
+// Открытие модального окна
+openPlayerButton.addEventListener("click", () => {
+    if (luscherModal) {
+        luscherModal.style.display = "flex";
+    }
+    if (songListContainer) {
+        songListContainer.innerHTML = ''; // Очистить список песен
+    }
+    startLuscherTimer(10000); // Запускаем таймер на 15 секунд
+});
+
+// Функция фильтрации песен по цвету
+function filterSongsByColor(color) {
+    const filteredSongs = songs.filter(song => 
+        song['data-color'] && song['data-color'].toLowerCase() === color.toLowerCase()
+    );
+
+    updatePlaylist(filteredSongs);
+
+    if (filteredSongs.length === 0) {
+        const playlistContainer = document.querySelector("#playlist");
+        playlistContainer.innerHTML = '<tr><td colspan="4">На жаль, немає пісень з таким кольором.</td></tr>';
+    }
+}
+
+// TEST LUSHERA //
+
 // Змінні для стану програвача
 let playing = false, 
   shuffle = false, 
@@ -186,42 +273,44 @@ function init() {
 }
 
 // Оновлення плейлиста
-function updatePlaylist(songs) {
-  playlistContainer.innerHTML = songs.map((song, index) => `
-    <tr class="song">
-      <td class="no"><h5>${song.id + 1}</h5></td>
-      <td class="title"><h6>${song.title}</h6></td>
-      <td class="length"><h5>2:03</h5></td>
-      <td><i class="fas fa-heart ${favourites.includes(index) ? "active" : ""}"></i></td>
-    </tr>
+function updatePlaylist(songList) {
+  const playlistContainer = document.querySelector("#playlist");
+  playlistContainer.innerHTML = songList.map((song, index) => `
+      <tr class="song">
+          <td class="no"><h5>${song.id + 1}</h5></td>
+          <td class="title"><h6>${song.title}</h6></td>
+          <td class="length"><h5>2:03</h5></td>
+          <td><i class="fas fa-heart ${favourites.includes(index) ? "active" : ""}"></i></td>
+      </tr>
   `).join("");
 
-  // Додаємо події для кожного рядка пісні в плейлисті
+  // Добавляем обработчики событий для новых строк плейлиста
   document.querySelectorAll(".song").forEach((tr, index) => {
-    tr.addEventListener("click", (e) => {
-      if (e.target.classList.contains("fa-heart")) {
-        addToFavourites(index);
-        e.target.classList.toggle("active");
-        return;
-      }
-      currentSong = songs[index].id;
-    loadSong(currentSong);
-    audio.play();
-    container.classList.remove("active");
-    playPauseBtn.classList.replace("fa-play", "fa-pause");
-    playing = true;
+      tr.addEventListener("click", (e) => {
+          if (e.target.classList.contains("fa-heart")) {
+              addToFavourites(index);
+              e.target.classList.toggle("active");
+              return;
+          }
+          currentSong = songList[index].id;
+          loadSong(currentSong);
+          audio.play();
+          container.classList.remove("active");
+          playPauseBtn.classList.replace("fa-play", "fa-pause");
+          playing = true;
 
-    // Скрыть поле поиска и обновить плейлист
-    searchInput.style.display = 'none';
-    searchInput.value = '';
-    updatePlaylist(songs);
-    });
+          // Скрываем поле поиска и обновляем плейлист
+          searchInput.style.display = 'none';
+          searchInput.value = '';
+          updatePlaylist(songList);
+      });
 
-    const audioForDuration = new Audio(`${baseAudioPath}${songs[index].src}`);
-    audioForDuration.addEventListener("loadedmetadata", () => {
-      const duration = formatTime(audioForDuration.duration);
-      tr.querySelector(".length h5").innerText = duration;
-    });
+      // Загружаем длительность песен
+      const audioForDuration = new Audio(`${baseAudioPath}${songList[index].src}`);
+      audioForDuration.addEventListener("loadedmetadata", () => {
+          const duration = formatTime(audioForDuration.duration);
+          tr.querySelector(".length h5").innerText = duration;
+      });
   });
 }
 
