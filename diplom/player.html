@@ -18,36 +18,52 @@
 		<div class="main-menu active">
 			<img src="/data/image/YouPlayer.png" alt="YouPlayer Logo" class="menu-logo" style="width: 100%; height: 100%; padding-top: 20px;">
 			<ul class="menu-list">
-				<li><button id="openPlayer">До програвача</button></li>
+				<li><button id="openPlayer">Програвач</button></li>
 				<li><button>Список відтворення</button></li>
 				<li><button>Улюблене</button></li>
 				<li><button>Налаштування</button></li>
-				<li><button>Про програму</button></li>
+				<li><button id="openAboutApp">Про YouPlayer</button></li>
 			</ul>
 		</div>
 	
 		<!-- Модальное окно теста Люшера -->
-		<div id="luscherModal" class="luscher-test-container" style="display: none;">
-			<div class="test-content">
-				<h2 style="color: black;">Тест Люшера</h2><br>
-				<p style="color: black;">Виберіть колір, який вам найбільш приємний:</p>
-				<div class="color-buttons">
-					<button class="color-choice" style="background-color: blue;" data-color="blue"></button>
-					<button class="color-choice" style="background-color: #00FF00;" data-color="green"></button>
-					<button class="color-choice" style="background-color: red;" data-color="red"></button>
-					<button class="color-choice" style="background-color: yellow;" data-color="yellow"></button>
-					<button class="color-choice" style="background-color: #111;" data-color="black"></button>
-					<button class="color-choice" style="background-color: #FFF;" data-color="white"></button>
-					<button class="color-choice" style="background-color: purple;" data-color="purple"></button>
-					<button class="color-choice" style="background-color: brown;" data-color="brown"></button>
+	<div id="luscherModal" class="luscher-test-container" style="display: none;">
+		<div class="test-content">
+		<h2 style="color: black;">Тест Люшера</h2><br>
+		<p style="color: black;">Виберіть колір, який вам найбільш приємний:</p>
+		<div class="color-buttons">
+			<button class="color-choice" style="background-color: blue;" data-color="blue"></button>
+			<button class="color-choice" style="background-color: #00FF00;" data-color="green"></button>
+			<button class="color-choice" style="background-color: red;" data-color="red"></button>
+			<button class="color-choice" style="background-color: yellow;" data-color="yellow"></button>
+			<button class="color-choice" style="background-color: #111;" data-color="black"></button>
+			<button class="color-choice" style="background-color: #FFF;" data-color="white"></button>
+			<button class="color-choice" style="background-color: purple;" data-color="purple"></button>
+			<button class="color-choice" style="background-color: brown;" data-color="brown"></button>
+		</div>
+		<p id="timer" style="color: black; font-size: 18px; margin-top: 10px;" data-lang="timer">10 секунд залишилося</p>
+		</div>
+		<div class="test-footer">
+		<button id="closeLuscherModal" data-lang="close">Закрити</button>
+		</div>
+	</div>
+  
+
+		<!-- Модальное окно промпта -->
+		<div id="choiceModal" class="choice-container" style="display: none;">
+			<div class="choice-content">
+				<h2 style="color: black;">Оберіть опцію</h2>
+				<div class="choice-buttons">
+					<button id="chooseLuscher" style="background-color: #4CAF50;">Тест Люшера</button>
+					<button id="chooseMood" style="background-color: #FF5722;">Ввести настрій</button>
 				</div>
-				<p id="timer" style="color: black; font-size: 18px; margin-top: 10px;">10 секунд залишилося</p>
 			</div>
-			<div class="test-footer">
-				<button id="closeLuscherModal">Закрити</button>
+			<div class="choice-footer">
+				<button id="closeChoiceModal" style="color: white">Закрити</button>
 			</div>
 		</div>
-		
+
+		<!-- продовження візуалу плеєра -->
 		 <div class="player-content" style="display: none;">
 			<div class="top">
 			   <i class="fas fa-bars menu-btn" style="padding: 4px;"></i>
@@ -129,6 +145,19 @@
 		<p class="current-song-title">song title</p>
 	</div>
 
+	<!-- про YouPlayer -->
+	<div class="about-app-modal" id="aboutAppModal" style="display: none;">
+		<div class="about-app-content">
+		<i class="fas fa-arrow-left close-btn" id="closeAboutApp"></i>
+		<h2 style="font-size: 18px; margin: -22px;">Про YouPlayer</h2>
+		<p>YouPlayer — ідеальний супутник для любителів музики. Керуйте своїми треками, створюйте персоналізовані плейлисти та насолоджуйтеся якісним звуком у будь-якій ситуації.</p>
+		<div>
+		<p style="font-size: 14px;">Версія додатка: 0.6.9</p>
+		</div>
+		</div>
+	</div>
+  
+  
 <script src="player.js"></script>
 
 

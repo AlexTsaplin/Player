@@ -291,7 +291,8 @@ i:active {
 #current-favourite:hover,
 #shuffle:hover,
 #repeat:hover,
-#option:hover {
+#option:hover,
+#closeAboutApp:hover {
     color: #ff564c; /* Цвет при наведении */
 }
 
@@ -571,6 +572,274 @@ i:active {
 
 /* ТЕСТ ЛЮШЕРА */
 
+
+/* Вікно настрою */
+#applyMood {
+    padding: 10px 20px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: white;
+    background-color: rgba(82, 82, 82, 0.8);
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#applyMood:hover {
+    background-color: rgba(168, 147, 147, 0.9);
+    transform: scale(1.05);
+}
+
+#moodInput {
+    width: 80%; /* Задать ширину в процентах */
+    padding: 10px; /* Пространство внутри поля */
+    margin-bottom: 10px; /* Отступ снизу */
+    font-size: 16px; /* Размер текста */
+    border: 2px solid rgba(82, 82, 82, 0.8); /* Граница */
+    border-radius: 7px; /* Закругленные углы */
+    outline: none; /* Убирает стандартный фокус */
+    background-color: rgba(255, 255, 255, 0.9); /* Светлый фон */
+    color: #333; /* Цвет текста */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Тень */
+    transition: all 0.3s ease; /* Плавный переход для эффектов */
+}
+
+#moodInput:focus {
+    border-color: rgba(168, 147, 147, 0.9); /* Изменение цвета границы при фокусе */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Усиление тени при фокусе */
+    background-color: #fff; /* Светлый фон при фокусе */
+}
+
+#moodInput::placeholder {
+    color: rgba(82, 82, 82, 0.8); /* Цвет текста в placeholder */
+    font-style: italic; /* Курсивный текст в placeholder */
+}
+
+#closeMoodModal {
+    position: absolute;
+    bottom: 180px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    font-size: 18px;
+    color: white;
+    background-color: rgba(82, 82, 82, 0.8);
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#closeMoodModal:hover {
+    background-color: rgba(168, 147, 147, 0.9);
+    transform: scale(1.05);
+}
+
+#closeMoodModal:focus {
+    outline: none;
+}
+
+#closeMoodModal:active {
+    background-color: rgba(0, 0, 0, 1);
+}
+/* Window mood */
+
+/* Вікно вибору варіантів */
+.choice-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.choice-content {
+    background-color: #be9d9d;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.choice-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.choice-buttons button {
+    margin: 10px 0;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#chooseLuscher {
+    background-color: #4CAF50;
+}
+
+#chooseLuscher:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+#chooseMood {
+    background-color: #FF5722;
+}
+
+#chooseMood:hover {
+    background-color: #E64A19;
+    transform: scale(1.05);
+}
+
+.choice-footer {
+    position: absolute;
+    bottom: 180px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+.choice-footer button {
+    padding: 10px 20px;
+    font-size: 18px;
+    color: white;
+    background-color: rgba(82, 82, 82, 0.8);
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.choice-footer button:hover {
+    background-color: rgba(168, 147, 147, 0.9);
+    transform: scale(1.05);
+}
+.choice-footer button:focus {
+    outline: none;
+}
+.choice-footer button:active {
+    background-color: rgba(0, 0, 0, 1);
+}
+
+/* Options selection window */
+
+
+/* Модальное окно "про YouPlayer" */
+.player-container {
+    position: relative;
+    width: 100%;
+    height: 100%; /* Плеер занимает всю доступную область */
+    overflow: hidden; /* Прячем все, что выходит за границы плеера */
+  }
+  
+  .about-app-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Полупрозрачный черный фон */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    box-sizing: border-box;
+    padding: 20px;
+    overflow: auto;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .about-app-content {
+    background-color: rgba(255, 255, 255, 0.1); /* Полупрозрачный фон */
+    padding: 30px;
+    border-radius: 16px;
+    width: 100%;
+    height: 100%; /* Занимает всю высоту плеера */
+    max-width: 100%; /* Занимает всю ширину плеера */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
+    overflow-y: auto; /* Добавляем прокрутку, если контент не помещается */
+  }
+  
+  .about-app-content h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .about-app-content p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .close-btn {
+    font-size: 20px; /* Размер стрелки */
+    color: white;
+    cursor: pointer;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    transition: transform 0.3s; /* Плавное увеличение */
+  }
+  
+  .close-btn:hover {
+    transform: scale(1.2); /* Увеличиваем стрелку при наведении */
+  }
+  
+  .about-app-actions {
+    margin-top: 30px;
+  }
+  
+  .action-btn {
+    background-color: rgba(255, 255, 255, 0.2); /* Полупрозрачный фон */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .action-btn:hover {
+    background-color: rgba(255, 255, 255, 0.4); /* Подсветка при наведении */
+  }
+  
+
+/* Модальное окно настроек */
+
+  
+  
+  
+  
+  
+  
+  
 
   
 

@@ -31,7 +31,7 @@ function loadSong(num) {
   if (!songs[num]) {  // Проверяем, существует ли песня с индексом num
     return;
   }
-  
+
   infoWrapper.innerHTML = `<h2>${songs[num].title}</h2><h3>${songs[num].artist}</h3>`;
   currentSongTitle.innerHTML = songs[num].title;
   coverImage.style.backgroundImage = `url(data/image/${songs[num].img_src})`;
@@ -74,82 +74,66 @@ const trackTitle = document.querySelector('.track-title');
 const trackArtist = document.querySelector('.track-artist');
 const trackCover = document.querySelector('.track-cover');
 
-
 const baseAudioPath = "data/audio/";
 const baseImagePath = "data/image/";
 
-// ТЕСТ ЛЮШЕРА //
+// --- Тест Люшера --- //
 
-// Селекторы для элементов
-const openPlayerButton = document.getElementById("openPlayer");
 const luscherModal = document.getElementById("luscherModal");
 const closeLuscherModalButton = document.getElementById("closeLuscherModal");
 const colorButtons = document.querySelectorAll(".color-choice");
-const songListContainer = document.getElementById("song-list");
 const timerElement = document.getElementById("timer"); // Элемент для отображения таймера
 let luscherTimer; // Таймер для закрытия модального окна
 let interval; // Таймер для обратного отсчета
 
 // Функция запуска таймера
 function startLuscherTimer(duration) {
-    clearTimeout(luscherTimer); // Сбрасываем предыдущий таймер
-    clearInterval(interval); // Останавливаем обратный отсчёт, если он запущен
+    clearTimeout(luscherTimer);
+    clearInterval(interval);
 
-    if (!timerElement) {
-        console.error("Таймер (timerElement) не найден в DOM.");
-        return;
-    }
+    let remainingTime = duration / 1000; // В секундах
 
-    let remainingTime = duration / 1000; // Преобразуем миллисекунды в секунды
-
-    // Обновляем текст таймера каждую секунду
     interval = setInterval(() => {
-      if (remainingTime > 0) {
-          remainingTime--; // Сначала уменьшаем
-          timerElement.textContent = `${remainingTime} секунд залишилося`; // Потом отображаем
-      } else {
-          clearInterval(interval); // Останавливаем обратный отсчёт
-          timerElement.textContent = `0 секунд залишилося`; // Показываем 0, если время вышло
-      }
-  }, 1000);
+        if (remainingTime > 0) {
+            remainingTime--;
+            timerElement.textContent = `${remainingTime} секунд залишилося`;
+        } else {
+            clearInterval(interval);
+            timerElement.textContent = `0 секунд залишилося`;
+        }
+    }, 1000);
 
-    // Устанавливаем таймер для закрытия окна
     luscherTimer = setTimeout(() => {
-        clearInterval(interval); // Останавливаем обновление текста таймера
-        closeLuscherModal(); // Закрываем модальное окно
+        clearInterval(interval);
+        closeLuscherModal();
     }, duration);
 }
 
-// Функция закрытия модального окна
+// Закрытие окна Люшера
 function closeLuscherModal() {
-    if (luscherModal) {
-        luscherModal.style.display = "none";
-    }
-    clearTimeout(luscherTimer); // Сбрасываем основной таймер
-    clearInterval(interval); // Сбрасываем таймер обратного отсчета
+    luscherModal.style.display = "none";
+    clearTimeout(luscherTimer);
+    clearInterval(interval);
 }
+
+closeLuscherModalButton.addEventListener("click", closeLuscherModal);
 
 // Обработка выбора цвета
 colorButtons.forEach(button => {
     button.addEventListener("click", () => {
         const selectedColor = button.getAttribute("data-color");
-        filterSongsByColor(selectedColor); // Фильтруем песни
-        closeLuscherModal(); // Закрываем модальное окно
+        filterSongsByColor(selectedColor);
+        closeLuscherModal();
     });
 });
 
-// Открытие модального окна
-openPlayerButton.addEventListener("click", () => {
-    if (luscherModal) {
-        luscherModal.style.display = "flex";
-    }
-    if (songListContainer) {
-        songListContainer.innerHTML = ''; // Очистить список песен
-    }
-    startLuscherTimer(10000); // Запускаем таймер на 15 секунд
-});
+// Открытие окна Люшера
+function openLuscherModal() {
+    luscherModal.style.display = "flex";
+    startLuscherTimer(10000); // 10 секунд
+}
 
-// Функция фильтрации песен по цвету
+// Фильтрация песен по цвету
 function filterSongsByColor(color) {
     const filteredSongs = songs.filter(song => 
         song['data-color'] && song['data-color'].toLowerCase() === color.toLowerCase()
@@ -158,12 +142,87 @@ function filterSongsByColor(color) {
     updatePlaylist(filteredSongs);
 
     if (filteredSongs.length === 0) {
-        const playlistContainer = document.querySelector("#playlist");
         playlistContainer.innerHTML = '<tr><td colspan="4">На жаль, немає пісень з таким кольором.</td></tr>';
     }
 }
 
-// TEST LUSHERA //
+// --- Вікно вибору опцій --- //
+
+const choiceModal = document.getElementById("choiceModal");
+const chooseLuscherBtn = document.getElementById("chooseLuscher");
+const chooseMoodBtn = document.getElementById("chooseMood");
+const closeChoiceModalBtn = document.getElementById("closeChoiceModal");
+
+// Открыть выбор опций
+openPlayerBtn.addEventListener("click", () => {
+    choiceModal.style.display = "flex";
+});
+
+// Закрыть выбор опций
+closeChoiceModalBtn.addEventListener("click", () => {
+    choiceModal.style.display = "none";
+});
+
+// Выбор теста Люшера
+chooseLuscherBtn.addEventListener("click", () => {
+    choiceModal.style.display = "none";
+    openLuscherModal();
+});
+
+// Выбор настроения
+chooseMoodBtn.addEventListener("click", () => {
+    choiceModal.style.display = "none";
+
+    const moodModal = document.createElement("div");
+    moodModal.classList.add("luscher-test-container");
+    moodModal.innerHTML = `
+        <div class="test-content">
+            <h3 style="color: black;">Опишіть свій настрій:</h3><br>
+            <input type="text" id="moodInput" placeholder="Ваш настрій...">
+            <br>
+            <button id="applyMood" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; bottom: 300px">Підібрати пісню</button>
+            <button id="closeMoodModal" style="position: absolute; bottom: 185px; width: 117px; display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    font-size: 18px;
+    color: white;
+    background-color: rgba(82, 82, 82, 0.8);
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;">Закрити</button>
+        </div>
+    `;
+
+    playerContent.appendChild(moodModal);
+
+    const applyMoodBtn = document.getElementById("applyMood");
+    const closeMoodModalBtn = document.getElementById("closeMoodModal");
+
+    applyMoodBtn.addEventListener("click", () => {
+        const userMood = document.getElementById("moodInput").value.trim();
+        if (userMood) {
+            const matchedSongs = songs.filter(song =>
+                song.title.toLowerCase().includes(userMood.toLowerCase()) ||
+                song.artist.toLowerCase().includes(userMood.toLowerCase())
+            );
+
+            if (matchedSongs.length > 0) {
+                updatePlaylist(matchedSongs);
+            } else {
+                playlistContainer.innerHTML = '<tr><td colspan="4">Немає пісень, що відповідають вашому настрою.</td></tr>';
+            }
+
+            moodModal.remove();
+        }
+    });
+
+    closeMoodModalBtn.addEventListener("click", () => {
+        moodModal.remove();
+    });
+});
+
+// Window prompt //
 
 // Змінні для стану програвача
 let playing = false, 
@@ -198,8 +257,6 @@ backToMenuBtn.addEventListener("click", () => {
   searchInput.value = '';
   updatePlaylist(songs);
 });
-
-
 
 
 // Функция для открытия окна с информацией о треке
@@ -424,5 +481,22 @@ progressBar.addEventListener("click", (e) => {
   audio.currentTime = (clickX / width) * audio.duration;
 });
 
+//про програму
+document.getElementById("openAboutApp").addEventListener("click", function () {
+  document.getElementById("aboutAppModal").style.display = "flex";
+});
+
+document.getElementById("closeAboutApp").addEventListener("click", function () {
+  document.getElementById("aboutAppModal").style.display = "none";
+});
+
+
+// НАЛАШТУВАННЯ (зміна мовu)
+
+
+// Setting (language change)
+
 // Ініціалізація програвача
 init();
+
+
