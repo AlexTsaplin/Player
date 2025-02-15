@@ -110,7 +110,7 @@ i:active {
     position: absolute;
     top: 0;
     left: 0;
-    background: url("data/image/player.png") no-repeat;
+    background: url("data/image/song.png") no-repeat;
     background-size: cover;
     background-position: center;
     transform-origin: 0% 0%;

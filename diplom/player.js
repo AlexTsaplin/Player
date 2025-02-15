@@ -1,6 +1,6 @@
 // Инициализация пустого списка песен
 let songs = [];
-let currentSong = 0; // Начинаем с первой песни
+let currentSong = -1; // Начинаем с первой песни
 
 // Функция для загрузки JSON с песнями
 function loadSongs() {
@@ -23,12 +23,19 @@ function loadSongs() {
 // Инициализация плеера
 function init() {
   updatePlaylist(songs);
-  loadSong(currentSong);
+
+  // Если песня не выбрана, очищаем информацию
+  if (currentSong === -1) {
+    infoWrapper.innerHTML = `<h2></h2><h3></h3>`;
+    currentSongTitle.innerHTML = "";
+  }
 }
 
 // Функция для загрузки песни
 function loadSong(num) {
-  if (!songs[num]) {  // Проверяем, существует ли песня с индексом num
+  if (num === -1 || !songs[num]) {
+    infoWrapper.innerHTML = `<h2></h2><h3></h3>`;
+    currentSongTitle.innerHTML = "";
     return;
   }
 
