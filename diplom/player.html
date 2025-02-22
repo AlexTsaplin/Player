@@ -47,15 +47,41 @@
 		<button id="closeLuscherModal" data-lang="close">Закрити</button>
 		</div>
 	</div>
-  
+	
+		<!-- Модальное окно Ритмічного тесту -->
+		<div id="rhythmModal" class="luscher-test-container" style="display: none;">
+			<div class="test-content">
+			<h2 style="color: black;">Ритмічний тест</h2>
+			<p style="color: black;">Натискайте кнопку у бажаному ритмі:</p><br>
+			<button id="rhythmTapButton" style="font-size: 24px; padding: 20px;">CLICK</button><br>
+			<p id="rhythmResult" style="color: black; font-size: 18px;">BPM: --</p>
+			<p id="rhythmTimer" style="color: black; font-size: 18px;">Час: 0 с</p>
+			</div>
+			<div class="test-footer">
+			<button id="closeRhythmModal" style="color: white;">Закрити</button>
+			</div>
+		</div>
 
+		<!-- MBTI тест -->
+		<div id="mbtiModal" class="mbti-test-container" style="display: none;">
+			<div class="test-content">
+			<h2 style="color: black;">MBTI тест</h2>
+			<div id="mbtiQuestionContainer"></div>
+			<button id="mbtiNextButton" style="font-size: 18px; padding: 10px 20px;">Далі</button>
+			</div>
+			<div class="test-footer">
+			<button id="closeMbtiModal" style="display: none; color: white;">Закрити</button>
+			</div>
+		</div>
+  
 		<!-- Модальное окно промпта -->
 		<div id="choiceModal" class="choice-container" style="display: none;">
 			<div class="choice-content">
 				<h2 style="color: black;">Оберіть опцію</h2>
 				<div class="choice-buttons">
 					<button id="chooseLuscher" style="background-color: #4CAF50;">Тест Люшера</button>
-					<button id="chooseMood" style="background-color: #FF5722;">Ввести настрій</button>
+					<button id="chooseMbtiTest" style="background-color: #2196F3;">MBTI тест</button>
+					<button id="chooseRhythmTest" style="background-color: #2196F3;">Ритмічний тест</button>
 				</div>
 			</div>
 			<div class="choice-footer">

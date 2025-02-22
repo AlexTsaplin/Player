@@ -39,10 +39,19 @@ function loadSong(num) {
     return;
   }
 
+  // Останавливаем предыдущее воспроизведение
+  audio.pause();
+  audio.src = "";
+  audio.load();
+  audio.currentTime = 0;
+
   infoWrapper.innerHTML = `<h2>${songs[num].title}</h2><h3>${songs[num].artist}</h3>`;
   currentSongTitle.innerHTML = songs[num].title;
   coverImage.style.backgroundImage = `url(data/image/${songs[num].img_src})`;
+
+  // Загружаем новую песню
   audio.src = `${baseAudioPath}${songs[num].src}`;
+  audio.load();
   currentFavourite.classList.toggle("active", favourites.includes(num));
 }
 
@@ -84,36 +93,149 @@ const trackCover = document.querySelector('.track-cover');
 const baseAudioPath = "data/audio/";
 const baseImagePath = "data/image/";
 
-// --- Тест Люшера --- //
+// --- Ритм. тест --- //
+// Предполагается, что глобальный массив songs уже загружен (например, через loadSongs)
+let songsWithTemp = [];
 
+// Функция для визначення "temp" за кольором
+function getTempByColor(color) {
+  if (!color) return "neutral";
+  const energeticColors = ["red", "yellow", "purple", "blue"];
+  const calmColors = ["black", "white", "brown"];
+  if (energeticColors.includes(color.toLowerCase())) return "energetic";
+  if (calmColors.includes(color.toLowerCase())) return "calm";
+  return "neutral";
+}
+
+// Функция для обчислення нового масиву пісень з властивістю temp.
+// Викликайте її після завантаження пісень (наприклад, у loadSongs).
+function computeSongsWithTemp() {
+  songsWithTemp = songs.map(song => {
+    const color = song["data-color"] || song["data-colorr"] || "";
+    return { ...song, temp: getTempByColor(color) };
+  });
+}
+
+function filterSongsByRhythm(bpm) {
+  const tempMap = {
+    energetic: bpm >= 200,
+    calm: bpm <= 150,
+    neutral: bpm > 150 && bpm < 200,
+  };
+
+  const filteredSongs = songsWithTemp.filter(song =>
+    tempMap[song.temp]
+  );
+  
+  currentSongs = filteredSongs;
+  updatePlaylist(filteredSongs);
+}
+
+// Глобальні змінні для ритмічного тесту
+let tapTimes = [];
+let startTime = 0;
+let rhythmInterval;
+let rhythmTimeout;
+
+function openRhythmModal() {
+  const rhythmModal = document.getElementById("rhythmModal");
+  const rhythmResult = document.getElementById("rhythmResult");
+  const rhythmTimer = document.getElementById("rhythmTimer");
+  const tapButton = document.getElementById("rhythmTapButton");
+
+  tapTimes = [];
+  startTime = Date.now();
+  rhythmResult.textContent = "BPM: --";
+  rhythmTimer.textContent = "Час: 0 с";
+  tapButton.disabled = false;
+  rhythmModal.style.display = "flex";
+
+  rhythmInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    rhythmTimer.textContent = "Час: " + elapsed + " с";
+  }, 1000);
+
+  rhythmTimeout = setTimeout(() => {
+    clearInterval(rhythmInterval);
+    tapButton.disabled = true;
+
+    let finalBPM;
+    if (tapTimes.length > 1) {
+      const totalTime = tapTimes[tapTimes.length - 1] - tapTimes[0];
+      const avgInterval = totalTime / (tapTimes.length - 1);
+      finalBPM = Math.round(60000 / avgInterval);
+      rhythmResult.textContent = "Final BPM: " + finalBPM;
+    } else {
+      rhythmResult.textContent = "Недостатньо натискань";
+      finalBPM = 0;
+    }
+
+    setTimeout(() => {
+      rhythmModal.style.display = "none";
+      if (finalBPM > 0) {
+        filterSongsByRhythm(finalBPM);
+      }
+    }, 2000);
+  }, 8000);  
+}
+
+document.getElementById("rhythmTapButton").addEventListener("click", () => {
+  const now = Date.now();
+  tapTimes.push(now);
+  if (tapTimes.length > 1) {
+    const totalTime = tapTimes[tapTimes.length - 1] - tapTimes[0];
+    const avgInterval = totalTime / (tapTimes.length - 1);
+    const bpm = Math.round(60000 / avgInterval);
+    document.getElementById("rhythmResult").textContent = "BPM: " + bpm;
+  }
+});
+
+document.getElementById("closeRhythmModal").addEventListener("click", () => {
+  const rhythmModal = document.getElementById("rhythmModal");
+  rhythmModal.style.display = "none";
+  clearInterval(rhythmInterval);
+  clearTimeout(rhythmTimeout);
+});
+
+// Обробник кнопки "Ритмічний тест" у вікні вибору тестів
+document.getElementById("chooseRhythmTest")?.addEventListener("click", () => {
+  const choiceModal = document.getElementById("choiceModal");
+  if (choiceModal) {
+    choiceModal.style.display = "none";
+  }
+  computeSongsWithTemp();
+  openRhythmModal();
+});
+
+// --- Ритм. тест --- //
+
+// --- Тест Люшера --- //
 const luscherModal = document.getElementById("luscherModal");
 const closeLuscherModalButton = document.getElementById("closeLuscherModal");
 const colorButtons = document.querySelectorAll(".color-choice");
 const timerElement = document.getElementById("timer"); // Элемент для отображения таймера
-let luscherTimer; // Таймер для закрытия модального окна
-let interval; // Таймер для обратного отсчета
+let luscherTimer, interval; // Таймеры для закрытия модального окна и обратного отсчета
 
-// Функция запуска таймера
+// Функция для запуска таймера
 function startLuscherTimer(duration) {
     clearTimeout(luscherTimer);
     clearInterval(interval);
 
     let remainingTime = duration / 1000; // В секундах
-
     interval = setInterval(() => {
-        if (remainingTime > 0) {
-            remainingTime--;
-            timerElement.textContent = `${remainingTime} секунд залишилося`;
-        } else {
-            clearInterval(interval);
-            timerElement.textContent = `0 секунд залишилося`;
-        }
+        remainingTime > 0 
+            ? timerElement.textContent = `${--remainingTime} секунд залишилося` 
+            : endTimer();
     }, 1000);
 
-    luscherTimer = setTimeout(() => {
-        clearInterval(interval);
-        closeLuscherModal();
-    }, duration);
+    luscherTimer = setTimeout(endTimer, duration);
+}
+
+// Завершение таймера
+function endTimer() {
+    clearInterval(interval);
+    timerElement.textContent = `0 секунд залишилося`;
+    closeLuscherModal();
 }
 
 // Закрытие окна Люшера
@@ -128,8 +250,7 @@ closeLuscherModalButton.addEventListener("click", closeLuscherModal);
 // Обработка выбора цвета
 colorButtons.forEach(button => {
     button.addEventListener("click", () => {
-        const selectedColor = button.getAttribute("data-color");
-        filterSongsByColor(selectedColor);
+        filterSongsByColor(button.getAttribute("data-color"));
         closeLuscherModal();
     });
 });
@@ -142,7 +263,7 @@ function openLuscherModal() {
 
 // Фильтрация песен по цвету
 function filterSongsByColor(color) {
-    const filteredSongs = songs.filter(song => 
+    const filteredSongs = songs.filter(song =>
         song['data-color'] && song['data-color'].toLowerCase() === color.toLowerCase()
     );
 
@@ -152,12 +273,203 @@ function filterSongsByColor(color) {
         playlistContainer.innerHTML = '<tr><td colspan="4">На жаль, немає пісень з таким кольором.</td></tr>';
     }
 }
+// --- Тест Люшера --- //
+
+// --- MBTI тест --- //
+// Глобальные переменные для песен (предполагается, что где‑то есть функция loadSongs, которая загружает данные в songs)
+let songsWithMbti = [];     // Будет вычислен после загрузки песен
+
+const mbtiTypes = [
+  "ISTJ", "ISFJ", "INFJ", "INTJ",
+  "ISTP", "ISFP", "INFP", "INTP",
+  "ESTP", "ESFP", "ENFP", "ENTP",
+  "ESTJ", "ESFJ", "ENFJ", "ENTJ"
+];
+
+// Функция для вычисления массива песен с MBTI
+function computeSongsWithMbti() {
+  return songs.map(song => {
+    return {
+      ...song,
+      // Если у песни уже задан MBTI (и не пустой), оставляем его, иначе назначаем циклически
+      mbti: song.mbti && song.mbti.trim() !== ""
+            ? song.mbti.trim().toUpperCase()
+            : mbtiTypes[song.id % mbtiTypes.length]
+    };
+  });
+}
+
+// После загрузки песен (например, в loadSongs) необходимо пересчитать songsWithMbti:
+function loadSongs() {
+  fetch('songs.json')
+    .then(response => {
+      if (!response.ok) throw new Error("Ошибка загрузки данных");
+      return response.json();
+    })
+    .then(data => {
+      songs = data;
+      // Пересчитываем songsWithMbti после загрузки песен:
+      songsWithMbti = computeSongsWithMbti();
+      if (songs.length > 0) {
+        init(); // Инициализируем плеер
+      } else {
+        console.error('Список песен пуст');
+      }
+    })
+    .catch(error => console.error('Ошибка загрузки списка песен:', error));
+}
+
+// Массив вопросов MBTI-теста
+const mbtiQuestions = [
+  {
+    question: "Ви віддаєте перевагу спілкуванню з людьми чи проведенню часу на самоті?",
+    options: [
+      { text: "Екстраверсія (E)", value: "E" },
+      { text: "Інтроверсія (I)", value: "I" }
+    ]
+  },
+  {
+    question: "Ви Довіряєте фактам і конкретним деталям чи інтуїції й абстрактним ідеям?",
+    options: [
+      { text: "Сенсорика (S)", value: "S" },
+      { text: "Інтуїція (N)", value: "N" }
+    ]
+  },
+  {
+    question: "Ви приймаєте рішення на основі логіки чи почуттів?",
+    options: [
+      { text: "Логіка (T)", value: "T" },
+      { text: "Почуття (F)", value: "F" }
+    ]
+  },
+  {
+    question: "Ви віддаєте перевагу планувати чи імпровізувати?",
+    options: [
+      { text: "Міркування (J)", value: "J" },
+      { text: "Сприйняття (P)", value: "P" }
+    ]
+  }
+];
+
+// Функция фильтрации песен по MBTI типу
+function filterSongsByMbti(mbtiType) {
+  mbtiType = mbtiType.trim().toUpperCase();
+  console.log("Filtering songs for MBTI:", mbtiType);
+  const filteredSongs = songsWithMbti.filter(song =>
+    song.mbti && song.mbti === mbtiType
+  );
+  currentSongs = filteredSongs;
+  updatePlaylist(filteredSongs);
+}
+
+// Функция обновления плейлиста (пример)
+function updatePlaylist(songsList) {
+  document.getElementById("playlist").innerHTML =
+    songsList.map(song => `<div>${song.title} (${song.mbti})</div>`).join("");
+}
+
+// Глобальные переменные для MBTI-теста
+let mbtiCurrentQuestionIndex = 0;
+let mbtiAnswers = [];
+let selectedMbtiAnswer = null;
+
+// Функция открытия MBTI-теста
+function openMbtiTest() {
+  const mbtiModal = document.getElementById("mbtiModal");
+  mbtiModal.style.display = "flex";
+  // Скрываем кнопку закрытия только для MBTI-теста
+  document.getElementById("closeMbtiModal").style.display = "none";
+  
+  mbtiCurrentQuestionIndex = 0;
+  mbtiAnswers = [];
+  selectedMbtiAnswer = null;
+  displayMbtiQuestion();
+  document.getElementById("mbtiNextButton").style.display = "inline-block";
+  document.getElementById("mbtiNextButton").disabled = true;
+}
+
+
+// Функция отображения текущего вопроса MBTI-теста
+function displayMbtiQuestion() {
+  const questionContainer = document.getElementById("mbtiQuestionContainer");
+  questionContainer.innerHTML = ""; // Очищаем содержимое
+  if (mbtiCurrentQuestionIndex < mbtiQuestions.length) {
+    const currentQ = mbtiQuestions[mbtiCurrentQuestionIndex];
+    
+    const questionElement = document.createElement("p");
+    questionElement.textContent = currentQ.question;
+    questionContainer.appendChild(questionElement);
+    
+    const optionsDiv = document.createElement("div");
+    optionsDiv.className = "mbti-options";
+    
+    currentQ.options.forEach(option => {
+      const btn = document.createElement("button");
+      btn.className = "mbti-option";
+      btn.textContent = option.text;
+      btn.dataset.value = option.value;
+      
+      btn.addEventListener("click", () => {
+        selectedMbtiAnswer = option.value;
+        const allButtons = optionsDiv.querySelectorAll(".mbti-option");
+        allButtons.forEach(b => b.style.backgroundColor = "");
+        btn.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+        document.getElementById("mbtiNextButton").disabled = false;
+      });
+      
+      optionsDiv.appendChild(btn);
+    });
+    
+    questionContainer.appendChild(optionsDiv);
+  } else {
+    // Все вопросы отвечены — вычисляем MBTI тип
+    const mbtiType = mbtiAnswers.join("");
+    questionContainer.innerHTML = `<p>Ваш MBTI тип: <strong>${mbtiType}</strong></p>`;
+    document.getElementById("mbtiNextButton").style.display = "none";
+    
+    // Через 2 секунды закрываем тест, фильтруем песни и переключаем интерфейс
+    setTimeout(() => {
+      document.getElementById("mbtiModal").style.display = "none";
+      filterSongsByMbti(mbtiType);
+      // Здесь можно переключить вид плеера, например:
+      mainMenu.style.display = "none"; 
+      playerContent.style.display = "block"; 
+      playerBody.style.display = "block";
+      document.querySelector(".container").classList.add("active");
+    }, 2000);
+  }
+}
+
+// Обработчик кнопки "Далее"
+document.getElementById("mbtiNextButton").addEventListener("click", () => {
+  if (selectedMbtiAnswer) {
+    mbtiAnswers.push(selectedMbtiAnswer);
+    selectedMbtiAnswer = null;
+    mbtiCurrentQuestionIndex++;
+    displayMbtiQuestion();
+    document.getElementById("mbtiNextButton").disabled = true;
+  }
+});
+
+// Обработчик кнопки "Закрыть" в MBTI-тесте
+document.getElementById("closeMbtiModal").addEventListener("click", () => {
+  const mbtiModal = document.getElementById("mbtiModal");
+  mbtiModal.style.display = "none";
+});
+
+// Обработчик для кнопки открытия MBTI-теста из окна выбора тестов
+document.getElementById("chooseMbtiTest")?.addEventListener("click", () => {
+  const choiceModal = document.getElementById("choiceModal");
+  if (choiceModal) {
+    choiceModal.style.display = "none";
+  }
+  openMbtiTest();
+});
+// --- MBTI тест --- //
 
 // --- Вікно вибору опцій --- //
-
 const choiceModal = document.getElementById("choiceModal");
 const chooseLuscherBtn = document.getElementById("chooseLuscher");
-const chooseMoodBtn = document.getElementById("chooseMood");
 const closeChoiceModalBtn = document.getElementById("closeChoiceModal");
 
 // Открыть выбор опций
@@ -175,61 +487,6 @@ chooseLuscherBtn.addEventListener("click", () => {
     choiceModal.style.display = "none";
     openLuscherModal();
 });
-
-// Выбор настроения
-chooseMoodBtn.addEventListener("click", () => {
-    choiceModal.style.display = "none";
-
-    const moodModal = document.createElement("div");
-    moodModal.classList.add("luscher-test-container");
-    moodModal.innerHTML = `
-        <div class="test-content">
-            <h3 style="color: black;">Опишіть свій настрій:</h3><br>
-            <input type="text" id="moodInput" placeholder="Ваш настрій...">
-            <br>
-            <button id="applyMood" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; bottom: 300px">Підібрати пісню</button>
-            <button id="closeMoodModal" style="position: absolute; bottom: 185px; width: 117px; display: flex;
-    justify-content: center;
-    padding: 10px 0;
-    font-size: 18px;
-    color: white;
-    background-color: rgba(82, 82, 82, 0.8);
-    border: none;
-    border-radius: 7px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;">Закрити</button>
-        </div>
-    `;
-
-    playerContent.appendChild(moodModal);
-
-    const applyMoodBtn = document.getElementById("applyMood");
-    const closeMoodModalBtn = document.getElementById("closeMoodModal");
-
-    applyMoodBtn.addEventListener("click", () => {
-        const userMood = document.getElementById("moodInput").value.trim();
-        if (userMood) {
-            const matchedSongs = songs.filter(song =>
-                song.title.toLowerCase().includes(userMood.toLowerCase()) ||
-                song.artist.toLowerCase().includes(userMood.toLowerCase())
-            );
-
-            if (matchedSongs.length > 0) {
-                updatePlaylist(matchedSongs);
-            } else {
-                playlistContainer.innerHTML = '<tr><td colspan="4">Немає пісень, що відповідають вашому настрою.</td></tr>';
-            }
-
-            moodModal.remove();
-        }
-    });
-
-    closeMoodModalBtn.addEventListener("click", () => {
-        moodModal.remove();
-    });
-});
-
-// Window prompt //
 
 // Змінні для стану програвача
 let playing = false, 
@@ -300,7 +557,10 @@ volumeControl.addEventListener('input', updateVolume);
 // Функція для пошуку пісень
 searchInput.addEventListener('input', () => {
   const query = searchInput.value.toLowerCase();
-  const filteredSongs = songs.filter(song => song.title.toLowerCase().includes(query));
+  const filteredSongs = songs.filter(song =>
+    song.title.toLowerCase().includes(query) || 
+    song.artist.toLowerCase().includes(query)  // Добавлен поиск по исполнителю
+  );
   updatePlaylist(filteredSongs);
 });
 
@@ -343,7 +603,7 @@ function updatePlaylist(songList) {
       <tr class="song">
           <td class="no"><h5>${song.id + 1}</h5></td>
           <td class="title"><h6>${song.title}</h6></td>
-          <td class="length"><h5>2:03</h5></td>
+          <td class="length"><h5>0:00</h5></td>
           <td><i class="fas fa-heart ${favourites.includes(index) ? "active" : ""}"></i></td>
       </tr>
   `).join("");
@@ -497,13 +757,9 @@ document.getElementById("closeAboutApp").addEventListener("click", function () {
   document.getElementById("aboutAppModal").style.display = "none";
 });
 
-
 // НАЛАШТУВАННЯ (зміна мовu)
-
 
 // Setting (language change)
 
 // Ініціалізація програвача
 init();
-
-

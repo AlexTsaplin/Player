@@ -50,6 +50,33 @@ body {
     display: none;
 }
 
+#backToMenu {
+    background-color: transparent; /* Прозрачный фон */
+    color: white; /* Белый текст */
+    font-size: 18px; /* Размер шрифта */
+    padding: 12px 24px; /* Отступы */
+    border: 2px solid white; /* Белая рамка */
+    border-radius: 8px; /* Закругленные углы */
+    cursor: pointer; /* Делаем курсор указателем */
+    transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+    display: block;
+    margin: 20px auto; /* Центрирование кнопки */
+    box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.1); /* Легкая белая тень */
+}
+
+/* Эффект при наведении */
+#backToMenu:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Полупрозрачный фон */
+    transform: scale(1.05); /* Легкое увеличение */
+    border-color: #ddd; /* Светлее при наведении */
+}
+
+/* Эффект при нажатии */
+#backToMenu:active {
+    transform: scale(0.98); /* Легкое уменьшение */
+}
+
+
 i {
     cursor: pointer;
     transition: all 0.3s;
@@ -496,6 +523,12 @@ i:active {
  }
  
  
+ #chooseLuscher,
+ #chooseMbtiTest,
+ #chooseRhythmTest {
+     width: 190px;
+ }
+
 /* ТЕСТ ЛЮШЕРА */
 
 .luscher-test-container {
@@ -510,6 +543,28 @@ i:active {
     align-items: center;
     flex-direction: column;
     z-index: 100; 
+}
+
+/* Обеспечиваем относительное позиционирование контейнера MBTI-теста */
+#mbtiModal .test-content {
+    position: relative;
+    padding-bottom: 60px; /* Резерв для кнопки, можно настроить по необходимости */
+}
+
+/* Позиционирование кнопки закрытия MBTI-теста */
+#closeMbtiModal {
+    position: absolute;
+    bottom: 5%;      /* Располагается на 5% от низа контейнера */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: rgba(82, 82, 82, 0.8);
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .test-content {
@@ -570,81 +625,211 @@ i:active {
     background-color: rgba(0, 0, 0, 1); /* Цвет при нажатии */
 }
 
-/* ТЕСТ ЛЮШЕРА */
-
-
-/* Вікно настрою */
-#applyMood {
+#chooseLuscher {
     padding: 10px 20px;
     font-size: 18px;
-    margin-bottom: 20px;
-    color: white;
-    background-color: rgba(82, 82, 82, 0.8);
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
     border: none;
-    border-radius: 7px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
 }
 
-#applyMood:hover {
-    background-color: rgba(168, 147, 147, 0.9);
-    transform: scale(1.05);
+#chooseLuscher:hover {
+    background: linear-gradient(45deg, #ff9a76, #ff564c);
+    transform: scale(1.03);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
-#moodInput {
-    width: 80%; /* Задать ширину в процентах */
-    padding: 10px; /* Пространство внутри поля */
-    margin-bottom: 10px; /* Отступ снизу */
-    font-size: 16px; /* Размер текста */
-    border: 2px solid rgba(82, 82, 82, 0.8); /* Граница */
-    border-radius: 7px; /* Закругленные углы */
-    outline: none; /* Убирает стандартный фокус */
-    background-color: rgba(255, 255, 255, 0.9); /* Светлый фон */
-    color: #333; /* Цвет текста */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Тень */
-    transition: all 0.3s ease; /* Плавный переход для эффектов */
+#chooseLuscher:active {
+    transform: scale(0.98);
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
 }
 
-#moodInput:focus {
-    border-color: rgba(168, 147, 147, 0.9); /* Изменение цвета границы при фокусе */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Усиление тени при фокусе */
-    background-color: #fff; /* Светлый фон при фокусе */
-}
+/* ТЕСТ ЛЮШЕРА */
 
-#moodInput::placeholder {
-    color: rgba(82, 82, 82, 0.8); /* Цвет текста в placeholder */
-    font-style: italic; /* Курсивный текст в placeholder */
-}
+/* Ритм. Тест */
 
-#closeMoodModal {
-    position: absolute;
-    bottom: 180px;
-    width: 100%;
+.rhythm-test-container {
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.8); 
     display: flex;
     justify-content: center;
-    padding: 10px 0;
+    align-items: center;
+    flex-direction: column;
+    z-index: 100;
+}
+
+#chooseRhythmTest {
+    background-color: #4CAF50;
+}
+
+#chooseRhythmTest:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+#rhythmTapButton {
+    padding: 15px 30px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+#rhythmTapButton:hover {
+    background: linear-gradient(45deg, #ff9a76, #ff564c);
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+}
+
+#rhythmTapButton:active {
+    transform: scale(0.98);
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+}
+
+#chooseRhythmTest {
+    padding: 10px 20px;
     font-size: 18px;
-    color: white;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+}
+
+#chooseRhythmTest:hover {
+    background: linear-gradient(45deg, #ff9a76, #ff564c);
+    transform: scale(1.03);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+#chooseRhythmTest:active {
+    transform: scale(0.98);
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+}
+
+#closeRhythmModal {
+    position: absolute;
+    bottom: 25px;
+}
+
+/* Ритм. Тест */
+
+/* MBTI тест */
+
+.mbti-test-container {
+    position: absolute; 
+    top: 10;
+    left: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.8); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 100;
+}
+
+#mbtiQuestionContainer {
+    padding: 20px;
+    text-align: center;
+}
+
+.mbti-options {
+    margin-top: 20px;
+}
+
+.mbti-option {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
     background-color: rgba(82, 82, 82, 0.8);
     border: none;
     border-radius: 7px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-#closeMoodModal:hover {
+.mbti-option:hover {
     background-color: rgba(168, 147, 147, 0.9);
     transform: scale(1.05);
 }
 
-#closeMoodModal:focus {
-    outline: none;
+#closeMbtiModal {
+    position: absolute; 
+    bottom: -40px; 
+    width: 117px; 
+    display: flex;
 }
 
-#closeMoodModal:active {
-    background-color: rgba(0, 0, 0, 1);
+#chooseMbtiTest {
+    padding: 10px 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
 }
-/* Window mood */
+
+#chooseMbtiTest:hover {
+    background: linear-gradient(45deg, #ff9a76, #ff564c);
+    transform: scale(1.03);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+#chooseMbtiTest:active {
+    transform: scale(0.98);
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+}
+
+#mbtiNextButton {
+    background-color: #4CAF50; /* Зеленый цвет, можно заменить на любой */
+    color: white; /* Белый текст */
+    font-size: 18px; /* Размер шрифта */
+    padding: 12px 24px; /* Отступы внутри кнопки */
+    border: none; /* Убираем границу */
+    border-radius: 8px; /* Закругленные углы */
+    cursor: pointer; /* Делаем курсор указателем */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: block;
+    margin: 20px auto; /* Центрируем кнопку */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Тень для объема */
+}
+
+/* Эффект при наведении */
+#mbtiNextButton:hover {
+    background-color: #45a049; /* Темнее при наведении */
+    transform: scale(1.05); /* Легкое увеличение */
+}
+
+/* Эффект при нажатии */
+#mbtiNextButton:active {
+    transform: scale(0.98); /* Легкое уменьшение */
+}
+/* MBTI тест */
+
 
 /* Вікно вибору варіантів */
 .choice-container {
@@ -712,7 +897,7 @@ i:active {
 
 .choice-footer {
     position: absolute;
-    bottom: 180px;
+    bottom: 142px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -740,7 +925,6 @@ i:active {
 }
 
 /* Options selection window */
-
 
 /* Модальное окно "про YouPlayer" */
 .player-container {
@@ -832,14 +1016,3 @@ i:active {
   
 
 /* Модальное окно настроек */
-
-  
-  
-  
-  
-  
-  
-  
-
-  
-
