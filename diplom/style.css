@@ -35,6 +35,11 @@ body {
     background-color: var(--primary-color);
 }
 
+.small-artist {
+    font-size: 8px; /* або менше, залежно від вигляду */
+    opacity: 0.8;
+}
+
 .container {
     height: 650px;
     width: 366px;

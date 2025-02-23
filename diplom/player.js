@@ -93,121 +93,10 @@ const trackCover = document.querySelector('.track-cover');
 const baseAudioPath = "data/audio/";
 const baseImagePath = "data/image/";
 
-// --- Ритм. тест --- //
-// Предполагается, что глобальный массив songs уже загружен (например, через loadSongs)
-let songsWithTemp = [];
-
-// Функция для визначення "temp" за кольором
-function getTempByColor(color) {
-  if (!color) return "neutral";
-  const energeticColors = ["red", "yellow", "purple", "blue"];
-  const calmColors = ["black", "white", "brown"];
-  if (energeticColors.includes(color.toLowerCase())) return "energetic";
-  if (calmColors.includes(color.toLowerCase())) return "calm";
-  return "neutral";
-}
-
-// Функция для обчислення нового масиву пісень з властивістю temp.
-// Викликайте її після завантаження пісень (наприклад, у loadSongs).
-function computeSongsWithTemp() {
-  songsWithTemp = songs.map(song => {
-    const color = song["data-color"] || song["data-colorr"] || "";
-    return { ...song, temp: getTempByColor(color) };
-  });
-}
-
-function filterSongsByRhythm(bpm) {
-  const tempMap = {
-    energetic: bpm >= 200,
-    calm: bpm <= 150,
-    neutral: bpm > 150 && bpm < 200,
-  };
-
-  const filteredSongs = songsWithTemp.filter(song =>
-    tempMap[song.temp]
-  );
-  
-  currentSongs = filteredSongs;
-  updatePlaylist(filteredSongs);
-}
-
-// Глобальні змінні для ритмічного тесту
-let tapTimes = [];
-let startTime = 0;
-let rhythmInterval;
-let rhythmTimeout;
-
-function openRhythmModal() {
-  const rhythmModal = document.getElementById("rhythmModal");
-  const rhythmResult = document.getElementById("rhythmResult");
-  const rhythmTimer = document.getElementById("rhythmTimer");
-  const tapButton = document.getElementById("rhythmTapButton");
-
-  tapTimes = [];
-  startTime = Date.now();
-  rhythmResult.textContent = "BPM: --";
-  rhythmTimer.textContent = "Час: 0 с";
-  tapButton.disabled = false;
-  rhythmModal.style.display = "flex";
-
-  rhythmInterval = setInterval(() => {
-    const elapsed = Math.floor((Date.now() - startTime) / 1000);
-    rhythmTimer.textContent = "Час: " + elapsed + " с";
-  }, 1000);
-
-  rhythmTimeout = setTimeout(() => {
-    clearInterval(rhythmInterval);
-    tapButton.disabled = true;
-
-    let finalBPM;
-    if (tapTimes.length > 1) {
-      const totalTime = tapTimes[tapTimes.length - 1] - tapTimes[0];
-      const avgInterval = totalTime / (tapTimes.length - 1);
-      finalBPM = Math.round(60000 / avgInterval);
-      rhythmResult.textContent = "Final BPM: " + finalBPM;
-    } else {
-      rhythmResult.textContent = "Недостатньо натискань";
-      finalBPM = 0;
-    }
-
-    setTimeout(() => {
-      rhythmModal.style.display = "none";
-      if (finalBPM > 0) {
-        filterSongsByRhythm(finalBPM);
-      }
-    }, 2000);
-  }, 8000);  
-}
-
-document.getElementById("rhythmTapButton").addEventListener("click", () => {
-  const now = Date.now();
-  tapTimes.push(now);
-  if (tapTimes.length > 1) {
-    const totalTime = tapTimes[tapTimes.length - 1] - tapTimes[0];
-    const avgInterval = totalTime / (tapTimes.length - 1);
-    const bpm = Math.round(60000 / avgInterval);
-    document.getElementById("rhythmResult").textContent = "BPM: " + bpm;
-  }
-});
-
-document.getElementById("closeRhythmModal").addEventListener("click", () => {
-  const rhythmModal = document.getElementById("rhythmModal");
-  rhythmModal.style.display = "none";
-  clearInterval(rhythmInterval);
-  clearTimeout(rhythmTimeout);
-});
-
-// Обробник кнопки "Ритмічний тест" у вікні вибору тестів
-document.getElementById("chooseRhythmTest")?.addEventListener("click", () => {
-  const choiceModal = document.getElementById("choiceModal");
-  if (choiceModal) {
-    choiceModal.style.display = "none";
-  }
-  computeSongsWithTemp();
-  openRhythmModal();
-});
-
-// --- Ритм. тест --- //
+// --- Вікно вибору опцій --- //
+const choiceModal = document.getElementById("choiceModal");
+const chooseLuscherBtn = document.getElementById("chooseLuscher");
+const closeChoiceModalBtn = document.getElementById("closeChoiceModal");
 
 // --- Тест Люшера --- //
 const luscherModal = document.getElementById("luscherModal");
@@ -467,10 +356,121 @@ document.getElementById("chooseMbtiTest")?.addEventListener("click", () => {
 });
 // --- MBTI тест --- //
 
-// --- Вікно вибору опцій --- //
-const choiceModal = document.getElementById("choiceModal");
-const chooseLuscherBtn = document.getElementById("chooseLuscher");
-const closeChoiceModalBtn = document.getElementById("closeChoiceModal");
+// --- Ритм. тест --- //
+// Предполагается, что глобальный массив songs уже загружен (например, через loadSongs)
+let songsWithTemp = [];
+
+// Функция для визначення "temp" за кольором
+function getTempByColor(color) {
+  if (!color) return "neutral";
+  const energeticColors = ["red", "yellow", "purple", "blue"];
+  const calmColors = ["black", "white", "brown"];
+  if (energeticColors.includes(color.toLowerCase())) return "energetic";
+  if (calmColors.includes(color.toLowerCase())) return "calm";
+  return "neutral";
+}
+
+// Функция для обчислення нового масиву пісень з властивістю temp.
+// Викликайте її після завантаження пісень (наприклад, у loadSongs).
+function computeSongsWithTemp() {
+  songsWithTemp = songs.map(song => {
+    const color = song["data-color"] || song["data-colorr"] || "";
+    return { ...song, temp: getTempByColor(color) };
+  });
+}
+
+function filterSongsByRhythm(bpm) {
+  const tempMap = {
+    energetic: bpm >= 200,
+    calm: bpm <= 150,
+    neutral: bpm > 150 && bpm < 200,
+  };
+
+  const filteredSongs = songsWithTemp.filter(song =>
+    tempMap[song.temp]
+  );
+  
+  currentSongs = filteredSongs;
+  updatePlaylist(filteredSongs);
+}
+
+// Глобальні змінні для ритмічного тесту
+let tapTimes = [];
+let startTime = 0;
+let rhythmInterval;
+let rhythmTimeout;
+
+function openRhythmModal() {
+  const rhythmModal = document.getElementById("rhythmModal");
+  const rhythmResult = document.getElementById("rhythmResult");
+  const rhythmTimer = document.getElementById("rhythmTimer");
+  const tapButton = document.getElementById("rhythmTapButton");
+
+  tapTimes = [];
+  startTime = Date.now();
+  rhythmResult.textContent = "BPM: --";
+  rhythmTimer.textContent = "Час: 0 с";
+  tapButton.disabled = false;
+  rhythmModal.style.display = "flex";
+
+  rhythmInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    rhythmTimer.textContent = "Час: " + elapsed + " с";
+  }, 1000);
+
+  rhythmTimeout = setTimeout(() => {
+    clearInterval(rhythmInterval);
+    tapButton.disabled = true;
+
+    let finalBPM;
+    if (tapTimes.length > 1) {
+      const totalTime = tapTimes[tapTimes.length - 1] - tapTimes[0];
+      const avgInterval = totalTime / (tapTimes.length - 1);
+      finalBPM = Math.round(60000 / avgInterval);
+      rhythmResult.textContent = "Final BPM: " + finalBPM;
+    } else {
+      rhythmResult.textContent = "Недостатньо натискань";
+      finalBPM = 0;
+    }
+
+    setTimeout(() => {
+      rhythmModal.style.display = "none";
+      if (finalBPM > 0) {
+        filterSongsByRhythm(finalBPM);
+      }
+    }, 2000);
+  }, 8000);  
+}
+
+document.getElementById("rhythmTapButton").addEventListener("click", () => {
+  const now = Date.now();
+  tapTimes.push(now);
+  if (tapTimes.length > 1) {
+    const totalTime = tapTimes[tapTimes.length - 1] - tapTimes[0];
+    const avgInterval = totalTime / (tapTimes.length - 1);
+    const bpm = Math.round(60000 / avgInterval);
+    document.getElementById("rhythmResult").textContent = "BPM: " + bpm;
+  }
+});
+
+document.getElementById("closeRhythmModal").addEventListener("click", () => {
+  const rhythmModal = document.getElementById("rhythmModal");
+  rhythmModal.style.display = "none";
+  clearInterval(rhythmInterval);
+  clearTimeout(rhythmTimeout);
+});
+
+// Обробник кнопки "Ритмічний тест" у вікні вибору тестів
+document.getElementById("chooseRhythmTest")?.addEventListener("click", () => {
+  const choiceModal = document.getElementById("choiceModal");
+  if (choiceModal) {
+    choiceModal.style.display = "none";
+  }
+  computeSongsWithTemp();
+  openRhythmModal();
+});
+
+// --- Ритм. тест --- //
 
 // Открыть выбор опций
 openPlayerBtn.addEventListener("click", () => {
@@ -602,13 +602,16 @@ function updatePlaylist(songList) {
   playlistContainer.innerHTML = songList.map((song, index) => `
       <tr class="song">
           <td class="no"><h5>${song.id + 1}</h5></td>
-          <td class="title"><h6>${song.title}</h6></td>
+          <td class="title">
+              <h6>${song.title}</h6>
+              <h6 class="artist small-artist">${song.artist}</h6>
+          </td>
           <td class="length"><h5>0:00</h5></td>
           <td><i class="fas fa-heart ${favourites.includes(index) ? "active" : ""}"></i></td>
       </tr>
   `).join("");
 
-  // Добавляем обработчики событий для новых строк плейлиста
+  // Додаємо обробники подій для нових рядків списку
   document.querySelectorAll(".song").forEach((tr, index) => {
       tr.addEventListener("click", (e) => {
           if (e.target.classList.contains("fa-heart")) {
@@ -623,13 +626,13 @@ function updatePlaylist(songList) {
           playPauseBtn.classList.replace("fa-play", "fa-pause");
           playing = true;
 
-          // Скрываем поле поиска и обновляем плейлист
+          // Сховати поле пошуку та оновити список
           searchInput.style.display = 'none';
           searchInput.value = '';
           updatePlaylist(songList);
       });
 
-      // Загружаем длительность песен
+      // Завантажити тривалість пісень
       const audioForDuration = new Audio(`${baseAudioPath}${songList[index].src}`);
       audioForDuration.addEventListener("loadedmetadata", () => {
           const duration = formatTime(audioForDuration.duration);

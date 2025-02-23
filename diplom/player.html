@@ -73,7 +73,19 @@
 			<button id="closeMbtiModal" style="display: none; color: white;">Закрити</button>
 			</div>
 		</div>
-  
+
+		<div id="moodTestModal" class="mbti-test-container" style="display: none;">
+			<div class="test-content">
+			  <h2 style="color: black;">Тест настрою</h2>
+			  <textarea id="mood-input" rows="4" cols="50" placeholder="Опишіть свій настрій..."></textarea>
+			  <button id="analyzeMoodButton" style="margin-top: 10px;">Аналізувати</button>
+			  <h3 id="mood-result" style="color: black;"></h3>
+			</div>
+			<div class="test-footer">
+			  <button id="closeMoodTestModal">Закрити</button>
+			</div>
+		  </div>
+		
 		<!-- Модальное окно промпта -->
 		<div id="choiceModal" class="choice-container" style="display: none;">
 			<div class="choice-content">
@@ -81,7 +93,7 @@
 				<div class="choice-buttons">
 					<button id="chooseLuscher" style="background-color: #4CAF50;">Тест Люшера</button>
 					<button id="chooseMbtiTest" style="background-color: #2196F3;">MBTI тест</button>
-					<button id="chooseRhythmTest" style="background-color: #2196F3;">Ритмічний тест</button>
+					<button id="chooseRhythmTest" style="background-color: #2196F3;">Ритмічний тест</button>		
 				</div>
 			</div>
 			<div class="choice-footer">
@@ -109,8 +121,11 @@
 					<td class="title">
 						<h6>Song Title</h6>
 					</td>
+					<td class="artist">
+						<h6>Artist Title</h6>
+					</td>
 					<td class="length">
-						<h5>2:03</h5>
+						<h5>0:00</h5>
 					</td>
 					<td>
 						<i class="fas fa-heart"></i>
