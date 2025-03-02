@@ -45,7 +45,6 @@ body {
     width: 366px;
     position: relative;
     overflow: hidden;
-    border-radius: 10px;
     background: #be9d9d;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
     
@@ -810,29 +809,29 @@ i:active {
 }
 
 #mbtiNextButton {
-    background-color: #4CAF50; /* Зеленый цвет, можно заменить на любой */
-    color: white; /* Белый текст */
-    font-size: 18px; /* Размер шрифта */
-    padding: 12px 24px; /* Отступы внутри кнопки */
-    border: none; /* Убираем границу */
-    border-radius: 8px; /* Закругленные углы */
-    cursor: pointer; /* Делаем курсор указателем */
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    display: block;
-    margin: 20px auto; /* Центрируем кнопку */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Тень для объема */
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Эффект при наведении */
 #mbtiNextButton:hover {
-    background-color: #45a049; /* Темнее при наведении */
-    transform: scale(1.05); /* Легкое увеличение */
+    background: linear-gradient(45deg, #ff9a76, #ff564c);
+    transform: scale(1.03);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
-/* Эффект при нажатии */
 #mbtiNextButton:active {
-    transform: scale(0.98); /* Легкое уменьшение */
+    transform: scale(0.98);
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
 }
+
 /* MBTI тест */
 
 
@@ -888,15 +887,6 @@ i:active {
 
 #chooseLuscher:hover {
     background-color: #45a049;
-    transform: scale(1.05);
-}
-
-#chooseMood {
-    background-color: #FF5722;
-}
-
-#chooseMood:hover {
-    background-color: #E64A19;
     transform: scale(1.05);
 }
 
@@ -1021,3 +1011,88 @@ i:active {
   
 
 /* Модальное окно настроек */
+
+/* Налаштування */
+.settings-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+}
+
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px; /* Фіксована ширина */
+    min-height: 200px; /* Мінімальна висота */
+}
+
+.settings-content select {
+    padding: 5px;
+    font-size: 16px;
+}
+
+.settings-content button {
+    background: #ff4b5c;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.settings-content button:hover {
+    background: #ff1e3c;
+}
+
+/* Показуємо модальне вікно */
+.settings-container.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.settings-container.active .settings-content {
+    transform: translateY(0);
+}
+
+.settings-content h2,
+.settings-content label {
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+#closeSettings {
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+    width: 160px; /* Щоб кнопка займала всю ширину контейнера */
+    margin-top: 15px;
+}
+
+#closeSettings:hover {
+    background: linear-gradient(45deg, #ff9a76, #ff564c);
+    transform: scale(1.03);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+#closeSettings:active {
+    transform: scale(0.98);
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+}
+
+/* Settings */

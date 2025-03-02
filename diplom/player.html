@@ -18,86 +18,74 @@
 		<div class="main-menu active">
 			<img src="/data/image/YouPlayer.png" alt="YouPlayer Logo" class="menu-logo" style="width: 100%; height: 100%; padding-top: 20px;">
 			<ul class="menu-list">
-				<li><button id="openPlayer">Програвач</button></li>
-				<li><button>Список відтворення</button></li>
-				<li><button>Улюблене</button></li>
-				<li><button>Налаштування</button></li>
-				<li><button id="openAboutApp">Про YouPlayer</button></li>
+				<li><button id="openPlayer" data-lang="openPlayer">Програвач</button></li>
+				<li><button id="openSettings" data-lang="settings">Налаштування</button></li>
+				<li><button id="openAboutApp" data-lang="about">Про YouPlayer</button></li>
 			</ul>
 		</div>
 	
 		<!-- Модальное окно теста Люшера -->
-	<div id="luscherModal" class="luscher-test-container" style="display: none;">
-		<div class="test-content">
-		<h2 style="color: black;">Тест Люшера</h2><br>
-		<p style="color: black;">Виберіть колір, який вам найбільш приємний:</p>
-		<div class="color-buttons">
-			<button class="color-choice" style="background-color: blue;" data-color="blue"></button>
-			<button class="color-choice" style="background-color: #00FF00;" data-color="green"></button>
-			<button class="color-choice" style="background-color: red;" data-color="red"></button>
-			<button class="color-choice" style="background-color: yellow;" data-color="yellow"></button>
-			<button class="color-choice" style="background-color: #111;" data-color="black"></button>
-			<button class="color-choice" style="background-color: #FFF;" data-color="white"></button>
-			<button class="color-choice" style="background-color: purple;" data-color="purple"></button>
-			<button class="color-choice" style="background-color: brown;" data-color="brown"></button>
+		<div id="luscherModal" class="luscher-test-container" style="display: none;">
+			<div class="test-content">
+				<h2 data-lang="luscherTestTitle">Тест Люшера</h2>
+				<p data-lang="luscherTestText">Виберіть колір, який вам найбільш приємний:</p>
+				<div class="color-buttons">
+					<button class="color-choice" style="background-color: blue;" data-color="blue"></button>
+					<button class="color-choice" style="background-color: #00FF00;" data-color="green"></button>
+					<button class="color-choice" style="background-color: red;" data-color="red"></button>
+					<button class="color-choice" style="background-color: yellow;" data-color="yellow"></button>
+					<button class="color-choice" style="background-color: #111;" data-color="black"></button>
+					<button class="color-choice" style="background-color: #FFF;" data-color="white"></button>
+					<button class="color-choice" style="background-color: purple;" data-color="purple"></button>
+					<button class="color-choice" style="background-color: brown;" data-color="brown"></button>
+				</div>
+				<p id="timer" data-lang="timerText" style="color: black; font-size: 18px; margin-top: 10px;">10 секунд залишилося</p>
+			</div>
+			<div class="test-footer">
+				<button id="closeLuscherModal" data-lang="close">Закрити</button>
+			</div>
 		</div>
-		<p id="timer" style="color: black; font-size: 18px; margin-top: 10px;" data-lang="timer">10 секунд залишилося</p>
-		</div>
-		<div class="test-footer">
-		<button id="closeLuscherModal" data-lang="close">Закрити</button>
-		</div>
-	</div>
+		
 	
 		<!-- Модальное окно Ритмічного тесту -->
 		<div id="rhythmModal" class="luscher-test-container" style="display: none;">
 			<div class="test-content">
-			<h2 style="color: black;">Ритмічний тест</h2>
-			<p style="color: black;">Натискайте кнопку у бажаному ритмі:</p><br>
-			<button id="rhythmTapButton" style="font-size: 24px; padding: 20px;">CLICK</button><br>
-			<p id="rhythmResult" style="color: black; font-size: 18px;">BPM: --</p>
-			<p id="rhythmTimer" style="color: black; font-size: 18px;">Час: 0 с</p>
+				<h2 data-lang="rhythmTestTitle">Ритмічний тест</h2>
+				<p data-lang="rhythmTestText">Натискайте кнопку у бажаному ритмі:</p><br>
+				<button id="rhythmTapButton" style="font-size: 24px; padding: 20px;" data-lang="click">Натискайте</button><br>
+				<p id="rhythmResult" data-lang="bpm">BPM: --</p>
+				<p id="rhythmTimer" data-lang="timeLeft">Час: 0 с</p>
 			</div>
 			<div class="test-footer">
-			<button id="closeRhythmModal" style="color: white;">Закрити</button>
+				<button id="closeRhythmModal" style="color: white;" data-lang="close">Закрити</button>
 			</div>
-		</div>
+		</div>		
 
 		<!-- MBTI тест -->
 		<div id="mbtiModal" class="mbti-test-container" style="display: none;">
 			<div class="test-content">
-			<h2 style="color: black;">MBTI тест</h2>
-			<div id="mbtiQuestionContainer"></div>
-			<button id="mbtiNextButton" style="font-size: 18px; padding: 10px 20px;">Далі</button>
+				<h2 data-lang="mbtiTestTitle">MBTI тест</h2>
+				<div id="mbtiQuestionContainer"></div>
+				<button id="mbtiNextButton" data-lang="next">Далі</button>
 			</div>
 			<div class="test-footer">
-			<button id="closeMbtiModal" style="display: none; color: white;">Закрити</button>
+				<button id="closeMbtiModal" style="display: none;" data-lang="close">Закрити</button>
 			</div>
 		</div>
-
-		<div id="moodTestModal" class="mbti-test-container" style="display: none;">
-			<div class="test-content">
-			  <h2 style="color: black;">Тест настрою</h2>
-			  <textarea id="mood-input" rows="4" cols="50" placeholder="Опишіть свій настрій..."></textarea>
-			  <button id="analyzeMoodButton" style="margin-top: 10px;">Аналізувати</button>
-			  <h3 id="mood-result" style="color: black;"></h3>
-			</div>
-			<div class="test-footer">
-			  <button id="closeMoodTestModal">Закрити</button>
-			</div>
-		  </div>
+		
 		
 		<!-- Модальное окно промпта -->
 		<div id="choiceModal" class="choice-container" style="display: none;">
 			<div class="choice-content">
-				<h2 style="color: black;">Оберіть опцію</h2>
+				<h2 data-lang="chooseOption">Оберіть опцію</h2>
 				<div class="choice-buttons">
-					<button id="chooseLuscher" style="background-color: #4CAF50;">Тест Люшера</button>
-					<button id="chooseMbtiTest" style="background-color: #2196F3;">MBTI тест</button>
-					<button id="chooseRhythmTest" style="background-color: #2196F3;">Ритмічний тест</button>		
+					<button id="chooseLuscher" data-lang="luscherTest">Тест Люшера</button>
+					<button id="chooseMbtiTest" data-lang="mbtiTest">MBTI тест</button>
+					<button id="chooseRhythmTest" data-lang="rhythmTest">Ритмічний тест</button>		
 				</div>
 			</div>
 			<div class="choice-footer">
-				<button id="closeChoiceModal" style="color: white">Закрити</button>
+				<button id="closeChoiceModal" style="color: white" data-lang="close">Закрити</button>
 			</div>
 		</div>
 
@@ -145,11 +133,11 @@
 				</div>
 			  </div>
 			  <div class="track-info-actions">
-				<button class="action-btn">Додати до плейлисту</button>
-				<button class="action-btn">Переглянути артиста</button>
-				<button class="action-btn">Переглянути альбом</button>
-				<button class="action-btn">Поширити</button>
-			  </div>
+				<button class="action-btn" data-lang="addToPlaylist">Додати до плейлисту</button>
+				<button class="action-btn" data-lang="viewArtist">Переглянути артиста</button>
+				<button class="action-btn" data-lang="viewAlbum">Переглянути альбом</button>
+				<button class="action-btn" data-lang="share">Поширити</button>
+			</div>			
 			</div>
 		  </div>
 
@@ -167,7 +155,7 @@
 		</div>
 
 		<div class="controls">
-			<button id="backToMenu" style="padding: 10px; background: none; border: 1px solid #fff; color: #fff; cursor: pointer;">Меню</button>
+			<button id="backToMenu" data-lang="menu" style="padding: 10px; background: none; border: 1px solid #fff; color: #fff; cursor: pointer;">Меню</button>
 			<i class="fas fa-backward" id="prev"></i>
 			<i class="fas fa-play" id="playpause"></i>
 			<i class="fas fa-forward" id="next"></i>
@@ -186,17 +174,39 @@
 		<p class="current-song-title">song title</p>
 	</div>
 
+	<!-- Контейнер налаштувань -->
+	<div id="settingsModal" class="settings-container" style="display: none;">
+		<div class="settings-content">
+			<h2 style="color: #111;" data-lang="setting">Налаштування</h2>
+
+			<label for="languageSelect">Мова:</label>
+			<select id="languageSelect">
+				<option value="uk">Українська</option>
+				<option value="en">English</option>
+			</select>
+
+			<br><br>
+			<button id="closeSettings" data-lang="close">Закрити</button>
+		</div>
+	</div>
+
+
+
+
 	<!-- про YouPlayer -->
 	<div class="about-app-modal" id="aboutAppModal" style="display: none;">
 		<div class="about-app-content">
-		<i class="fas fa-arrow-left close-btn" id="closeAboutApp"></i>
-		<h2 style="font-size: 18px; margin: -22px;">Про YouPlayer</h2>
-		<p>YouPlayer — ідеальний супутник для любителів музики. Керуйте своїми треками, створюйте персоналізовані плейлисти та насолоджуйтеся якісним звуком у будь-якій ситуації.</p>
-		<div>
-		<p style="font-size: 14px;">Версія додатка: 0.6.9</p>
-		</div>
+			<i class="fas fa-arrow-left close-btn" id="closeAboutApp"></i>
+			<h2 data-lang="aboutTitle">Про YouPlayer</h2>
+			<p data-lang="aboutText">
+				YouPlayer — ідеальний супутник для любителів музики. Керуйте своїми треками, створюйте персоналізовані плейлисти та насолоджуйтеся якісним звуком у будь-якій ситуації.
+			</p>
+			<div>
+				<p data-lang="appVersion">Версія додатка: 0.6.9</p>
+			</div>
 		</div>
 	</div>
+	
   
   
 <script src="player.js"></script>

@@ -211,34 +211,35 @@ function loadSongs() {
 // Массив вопросов MBTI-теста
 const mbtiQuestions = [
   {
-    question: "Ви віддаєте перевагу спілкуванню з людьми чи проведенню часу на самоті?",
+    question: "mbtiQuestion1",
     options: [
-      { text: "Екстраверсія (E)", value: "E" },
-      { text: "Інтроверсія (I)", value: "I" }
+      { text: "mbtiOptionE", value: "E" },
+      { text: "mbtiOptionI", value: "I" }
     ]
   },
   {
-    question: "Ви Довіряєте фактам і конкретним деталям чи інтуїції й абстрактним ідеям?",
+    question: "mbtiQuestion2",
     options: [
-      { text: "Сенсорика (S)", value: "S" },
-      { text: "Інтуїція (N)", value: "N" }
+      { text: "mbtiOptionS", value: "S" },
+      { text: "mbtiOptionN", value: "N" }
     ]
   },
   {
-    question: "Ви приймаєте рішення на основі логіки чи почуттів?",
+    question: "mbtiQuestion3",
     options: [
-      { text: "Логіка (T)", value: "T" },
-      { text: "Почуття (F)", value: "F" }
+      { text: "mbtiOptionT", value: "T" },
+      { text: "mbtiOptionF", value: "F" }
     ]
   },
   {
-    question: "Ви віддаєте перевагу планувати чи імпровізувати?",
+    question: "mbtiQuestion4",
     options: [
-      { text: "Міркування (J)", value: "J" },
-      { text: "Сприйняття (P)", value: "P" }
+      { text: "mbtiOptionJ", value: "J" },
+      { text: "mbtiOptionP", value: "P" }
     ]
   }
 ];
+
 
 // Функция фильтрации песен по MBTI типу
 function filterSongsByMbti(mbtiType) {
@@ -277,55 +278,53 @@ function openMbtiTest() {
   document.getElementById("mbtiNextButton").disabled = true;
 }
 
-
 // Функция отображения текущего вопроса MBTI-теста
 function displayMbtiQuestion() {
   const questionContainer = document.getElementById("mbtiQuestionContainer");
-  questionContainer.innerHTML = ""; // Очищаем содержимое
+  questionContainer.innerHTML = ""; // Очищаємо контейнер
+
+  const lang = localStorage.getItem("playerLanguage") || "uk"; // Додаємо визначення `lang`
+
   if (mbtiCurrentQuestionIndex < mbtiQuestions.length) {
-    const currentQ = mbtiQuestions[mbtiCurrentQuestionIndex];
-    
-    const questionElement = document.createElement("p");
-    questionElement.textContent = currentQ.question;
-    questionContainer.appendChild(questionElement);
-    
-    const optionsDiv = document.createElement("div");
-    optionsDiv.className = "mbti-options";
-    
-    currentQ.options.forEach(option => {
-      const btn = document.createElement("button");
-      btn.className = "mbti-option";
-      btn.textContent = option.text;
-      btn.dataset.value = option.value;
-      
-      btn.addEventListener("click", () => {
-        selectedMbtiAnswer = option.value;
-        const allButtons = optionsDiv.querySelectorAll(".mbti-option");
-        allButtons.forEach(b => b.style.backgroundColor = "");
-        btn.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
-        document.getElementById("mbtiNextButton").disabled = false;
+      const currentQ = mbtiQuestions[mbtiCurrentQuestionIndex];
+
+      // Відображаємо питання з перекладом
+      const questionElement = document.createElement("p");
+      questionElement.textContent = translations[lang][currentQ.question]; 
+      questionContainer.appendChild(questionElement);
+
+      // Відображаємо варіанти відповідей
+      const optionsDiv = document.createElement("div");
+      optionsDiv.className = "mbti-options";
+
+      currentQ.options.forEach(option => {
+          const btn = document.createElement("button");
+          btn.className = "mbti-option";
+          btn.textContent = translations[lang][option.text]; // Отримуємо переклад
+          btn.dataset.value = option.value;
+
+          btn.addEventListener("click", () => {
+              selectedMbtiAnswer = option.value;
+              document.querySelectorAll(".mbti-option").forEach(b => b.style.backgroundColor = "");
+              btn.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+              document.getElementById("mbtiNextButton").disabled = false;
+          });
+
+          optionsDiv.appendChild(btn);
       });
-      
-      optionsDiv.appendChild(btn);
-    });
-    
-    questionContainer.appendChild(optionsDiv);
+
+      questionContainer.appendChild(optionsDiv);
   } else {
-    // Все вопросы отвечены — вычисляем MBTI тип
-    const mbtiType = mbtiAnswers.join("");
-    questionContainer.innerHTML = `<p>Ваш MBTI тип: <strong>${mbtiType}</strong></p>`;
-    document.getElementById("mbtiNextButton").style.display = "none";
-    
-    // Через 2 секунды закрываем тест, фильтруем песни и переключаем интерфейс
-    setTimeout(() => {
-      document.getElementById("mbtiModal").style.display = "none";
-      filterSongsByMbti(mbtiType);
-      // Здесь можно переключить вид плеера, например:
-      mainMenu.style.display = "none"; 
-      playerContent.style.display = "block"; 
-      playerBody.style.display = "block";
-      document.querySelector(".container").classList.add("active");
-    }, 2000);
+      // Після завершення тесту
+      const mbtiType = mbtiAnswers.join("");
+      questionContainer.innerHTML = `<p>${translations[lang]["mbtiResult"]} <strong>${mbtiType}</strong></p>`;
+      document.getElementById("mbtiNextButton").style.display = "none";
+
+      // Фільтрація пісень за MBTI
+      setTimeout(() => {
+          document.getElementById("mbtiModal").style.display = "none";
+          filterSongsByMbti(mbtiType);
+      }, 2000);
   }
 }
 
@@ -509,6 +508,13 @@ openPlayerBtn.addEventListener("click", () => {
 backToMenuBtn.addEventListener("click", () => {
   mainMenu.style.display = "block"; 
 
+  // Зупиняємо відтворення
+  audio.pause();
+
+  // Міняємо значок на "Play"
+  playPauseBtn.classList.replace("fa-pause", "fa-play");
+  playing = false; // Оновлюємо стан
+
   // Скрываем интерфейс плеера
   playerContent.style.display = "none"; 
   playerBody.style.display = "none"; 
@@ -521,7 +527,6 @@ backToMenuBtn.addEventListener("click", () => {
   searchInput.value = '';
   updatePlaylist(songs);
 });
-
 
 // Функция для открытия окна с информацией о треке
 function openTrackInfo() {
@@ -761,8 +766,155 @@ document.getElementById("closeAboutApp").addEventListener("click", function () {
 });
 
 // НАЛАШТУВАННЯ (зміна мовu)
+const openSettingsBtn = document.getElementById("openSettings");
+const closeSettingsBtn = document.getElementById("closeSettings");
+const settingsModal = document.getElementById("settingsModal");
+const languageSelect = document.getElementById("languageSelect");
+
+// Відкриття налаштувань
+openSettingsBtn.addEventListener("click", () => {
+    settingsModal.style.display = "block";
+});
+
+// Закриття налаштувань
+closeSettingsBtn.addEventListener("click", () => {
+    settingsModal.style.display = "none";
+});
+
+// Функція зміни мови
+function updateLanguage(lang) {
+  document.documentElement.lang = lang;
+  localStorage.setItem("playerLanguage", lang);
+
+  document.querySelectorAll("[data-lang]").forEach(el => {
+      const key = el.getAttribute("data-lang");
+      if (translations[lang][key]) {
+          el.innerText = translations[lang][key];
+      }
+  });
+
+  // Якщо відкритий тест Люшера, оновлюємо таймер
+  if (document.getElementById("luscherModal").style.display === "flex") {
+      document.getElementById("timer").textContent = translations[lang]["timerText"];
+  }
+
+  // Якщо відкритий MBTI тест, оновлюємо питання
+  if (document.getElementById("mbtiModal").style.display === "flex") {
+      displayMbtiQuestion();
+  }
+
+  // Якщо відкритий ритмічний тест, оновлюємо BPM і таймер
+  if (document.getElementById("rhythmModal").style.display === "flex") {
+      document.getElementById("rhythmResult").textContent = translations[lang]["bpm"];
+      document.getElementById("rhythmTimer").textContent = translations[lang]["timeLeft"];
+  }
+}
+
+
+// Об'єкт перекладів
+const translations = {
+  uk: {
+      setting: "Налаштування",
+      addToPlaylist: "Додати до плейлисту",
+      viewArtist: "Переглянути артиста",
+      viewAlbum: "Переглянути альбом",
+      share: "Поширити",
+      menu: "Меню",
+      next: "Далі",
+      openPlayer: "Програвач",
+      settings: "Налаштування",
+      about: "Про YouPlayer",
+      close: "Закрити",
+      language: "Мова",
+      chooseOption: "Оберіть опцію",
+      rhythmTest: "Ритмічний тест",
+      rhythmTestTitle: "Ритмічний тест",
+      rhythmTestText: "Натискайте кнопку у бажаному ритмі:",
+      click: "Натискайте",
+      bpm: "BPM: --",
+      timeLeft: "Час: 0 с",
+      luscherTestTitle: "Тест Люшера",
+      luscherTest: "Тест Люшера",
+      luscherTestText: "Виберіть колір, який вам найбільш приємний:",
+      timerText: "10 секунд залишилося",
+      aboutTitle: "Про YouPlayer",
+      aboutText: "YouPlayer — ідеальний супутник для любителів музики. Керуйте своїми треками, створюйте персоналізовані плейлисти та насолоджуйтеся якісним звуком у будь-якій ситуації.",
+      appVersion: "Версія додатка: 0.6.9",
+      mbtiTest: "MBTI тест",
+      mbtiTestTitle: "MBTI тест",
+      mbtiResult: "Ваш MBTI тип:",
+      mbtiQuestion1: "Ви віддаєте перевагу спілкуванню з людьми чи проведенню часу на самоті?",
+      mbtiQuestion2: "Ви довіряєте фактам і конкретним деталям чи інтуїції й абстрактним ідеям?",
+      mbtiQuestion3: "Ви приймаєте рішення на основі логіки чи почуттів?",
+      mbtiQuestion4: "Ви віддаєте перевагу планувати чи імпровізувати?",
+      mbtiOptionE: "Екстраверсія (E)",
+      mbtiOptionI: "Інтроверсія (I)",
+      mbtiOptionS: "Сенсорика (S)",
+      mbtiOptionN: "Інтуїція (N)",
+      mbtiOptionT: "Логіка (T)",
+      mbtiOptionF: "Почуття (F)",
+      mbtiOptionJ: "Міркування (J)",
+      mbtiOptionP: "Сприйняття (P)"
+      
+  },
+  en: {
+      setting: "Setting",
+      addToPlaylist: "Add to Playlist",
+      viewArtist: "View Artist",
+      viewAlbum: "View Album",
+      share: "Share",
+      next: "Next",
+      menu: "Menu",
+      openPlayer: "Player",
+      settings: "Settings",
+      close: "Close",
+      language: "Language",
+      about: "About YouPlayer",
+      chooseOption: "Choose an option",
+      rhythmTest: "Rhythm Test",
+      rhythmTestTitle: "Rhythm Test",
+      rhythmTestText: "Tap the button at your desired rhythm:",
+      bpm: "BPM: --",
+      click: "Click",
+      timeLeft: "Time: 0s",
+      luscherTestTitle: "Luscher Test",
+      luscherTest: "Luscher Test",
+      luscherTestText: "Choose the color you find most pleasant:",
+      timerText: "10 seconds left",
+      aboutTitle: "About YouPlayer",
+      aboutText: "YouPlayer is the perfect companion for music lovers. Manage your tracks, create personalized playlists and enjoy high-quality sound in any situation.",
+      appVersion: "App version: 0.6.9",
+      mbtiTest: "MBTI Test",
+      mbtiTestTitle: "MBTI Test",
+      mbtiResult: "Your MBTI type:",
+      mbtiQuestion1: "Do you prefer socializing or spending time alone?",
+      mbtiQuestion2: "Do you trust facts and details or intuition and abstract ideas?",
+      mbtiQuestion3: "Do you make decisions based on logic or feelings?",
+      mbtiQuestion4: "Do you prefer planning or improvising?",
+      mbtiOptionE: "Extraversion (E)",
+      mbtiOptionI: "Introversion (I)",
+      mbtiOptionS: "Sensing (S)",
+      mbtiOptionN: "Intuition (N)",
+      mbtiOptionT: "Thinking (T)",
+      mbtiOptionF: "Feeling (F)",
+      mbtiOptionJ: "Judging (J)",
+      mbtiOptionP: "Perceiving (P)"
+  }
+};
+
+// Встановлення збереженої мови
+const savedLanguage = localStorage.getItem("playerLanguage") || "uk";
+languageSelect.value = savedLanguage;
+updateLanguage(savedLanguage);
+
+// Обробник зміни мови
+languageSelect.addEventListener("change", () => {
+    updateLanguage(languageSelect.value);
+});
 
 // Setting (language change)
+
+
 
 // Ініціалізація програвача
 init();
