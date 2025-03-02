@@ -152,16 +152,19 @@ function openLuscherModal() {
 
 // Фильтрация песен по цвету
 function filterSongsByColor(color) {
-    const filteredSongs = songs.filter(song =>
-        song['data-color'] && song['data-color'].toLowerCase() === color.toLowerCase()
-    );
+  // Приводим название цвета к нижнему регистру, если в объекте ключи в нижнем регистре
+  const colorKey = color.toLowerCase();
+  const filteredSongs = songs
+      .filter(song => song.colors && song.colors[colorKey] !== undefined)
+      .sort((a, b) => b.colors[colorKey] - a.colors[colorKey]); // Сортировка по убыванию коэффициента
 
-    updatePlaylist(filteredSongs);
+  updatePlaylist(filteredSongs);
 
-    if (filteredSongs.length === 0) {
-        playlistContainer.innerHTML = '<tr><td colspan="4">На жаль, немає пісень з таким кольором.</td></tr>';
-    }
+  if (filteredSongs.length === 0) {
+      playlistContainer.innerHTML = '<tr><td colspan="4">На жаль, немає пісень з таким кольором.</td></tr>';
+  }
 }
+
 // --- Тест Люшера --- //
 
 // --- MBTI тест --- //
@@ -373,10 +376,17 @@ function getTempByColor(color) {
 // Викликайте її після завантаження пісень (наприклад, у loadSongs).
 function computeSongsWithTemp() {
   songsWithTemp = songs.map(song => {
-    const color = song["data-color"] || song["data-colorr"] || "";
-    return { ...song, temp: getTempByColor(color) };
+    let dominantColor = "";
+    if (song.colors) {
+      // Знаходимо колір із максимальним значенням
+      dominantColor = Object.entries(song.colors).reduce((maxEntry, entry) => {
+        return entry[1] > maxEntry[1] ? entry : maxEntry;
+      }, ["", 0])[0];
+    }
+    return { ...song, temp: getTempByColor(dominantColor) };
   });
 }
+
 
 function filterSongsByRhythm(bpm) {
   const tempMap = {
