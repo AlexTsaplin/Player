@@ -814,7 +814,6 @@ function updateLanguage(lang) {
 // Об'єкт перекладів
 const translations = {
   uk: {
-      setting: "Налаштування",
       addToPlaylist: "Додати до плейлисту",
       viewArtist: "Переглянути артиста",
       viewAlbum: "Переглянути альбом",
@@ -823,6 +822,9 @@ const translations = {
       next: "Далі",
       openPlayer: "Програвач",
       settings: "Налаштування",
+      playerColor: "Колір плеєра",
+      language: "Мова",
+      setting: "Налаштування",
       about: "Про YouPlayer",
       close: "Закрити",
       language: "Мова",
@@ -858,7 +860,6 @@ const translations = {
       
   },
   en: {
-      setting: "Setting",
       addToPlaylist: "Add to Playlist",
       viewArtist: "View Artist",
       viewAlbum: "View Album",
@@ -867,6 +868,9 @@ const translations = {
       menu: "Menu",
       openPlayer: "Player",
       settings: "Settings",
+      playerColor: "Player Color:",
+      language: "Language:",
+      setting: "Setting",
       close: "Close",
       language: "Language",
       about: "About YouPlayer",
@@ -911,6 +915,35 @@ updateLanguage(savedLanguage);
 languageSelect.addEventListener("change", () => {
     updateLanguage(languageSelect.value);
 });
+
+// Зміна кольору
+document.addEventListener("DOMContentLoaded", () => {
+  const playerColorPicker = document.getElementById("playerColor");
+  const playerContainer = document.querySelector(".container.active"); // Використовуємо querySelector
+
+  if (!playerContainer) {
+      console.error("Елемент .container.active не знайдено!");
+      return;
+  }
+
+  // Функція зміни кольору
+  function updatePlayerColor(color) {
+      playerContainer.style.backgroundColor = color;
+      localStorage.setItem("playerColor", color);
+  }
+
+  // Завантажуємо збережений колір
+  const savedColor = localStorage.getItem("playerColor") || "#222";
+  playerContainer.style.backgroundColor = savedColor;
+  playerColorPicker.value = savedColor;
+
+  // Оновлюємо колір при виборі користувачем
+  playerColorPicker.addEventListener("input", () => {
+      updatePlayerColor(playerColorPicker.value);
+  });
+});
+
+
 
 // Setting (language change)
 
