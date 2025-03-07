@@ -98,6 +98,50 @@ const choiceModal = document.getElementById("choiceModal");
 const chooseLuscherBtn = document.getElementById("chooseLuscher");
 const closeChoiceModalBtn = document.getElementById("closeChoiceModal");
 
+// --- За жанрами --- //
+const chooseGenreTestBtn = document.getElementById("chooseGenreTest");
+const genreTestModal = document.getElementById("genreTestModal");
+const closeGenreTestModalButton = document.getElementById("closeGenreTestModal");
+const genreButtons = document.querySelectorAll(".genre-choice");
+
+// Відкриття модального вікна тесту "За жанрами"
+function openGenreTestModal() {
+    genreTestModal.style.display = "flex";
+}
+
+// Закриття модального вікна тесту "За жанрами"
+function closeGenreTestModal() {
+    genreTestModal.style.display = "none";
+}
+
+// Фільтрація пісень за жанром
+function filterSongsByGenre(genre) {
+    const filteredSongs = songs.filter(song => song.genre && song.genre.toLowerCase() === genre);
+    updatePlaylist(filteredSongs);
+
+    if (filteredSongs.length === 0) {
+        playlistContainer.innerHTML = '<tr><td colspan="4">На жаль, немає пісень у цьому жанрі.</td></tr>';
+    }
+}
+
+// Додаємо обробники подій для кнопок жанрів
+genreButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        filterSongsByGenre(button.getAttribute("data-genre"));
+        closeGenreTestModal();
+    });
+});
+
+// Обробник для кнопки відкриття тесту "За жанрами"
+chooseGenreTestBtn.addEventListener("click", () => {
+    choiceModal.style.display = "none";
+    openGenreTestModal();
+});
+
+// Обробник для кнопки закриття тесту "За жанрами"
+closeGenreTestModalButton.addEventListener("click", closeGenreTestModal);
+// --- By genre --- //
+
 // --- Тест Люшера --- //
 const luscherModal = document.getElementById("luscherModal");
 const closeLuscherModalButton = document.getElementById("closeLuscherModal");
@@ -775,11 +819,14 @@ document.getElementById("closeAboutApp").addEventListener("click", function () {
   document.getElementById("aboutAppModal").style.display = "none";
 });
 
-// НАЛАШТУВАННЯ (зміна мовu)
+// НАЛАШТУВАННЯ
 const openSettingsBtn = document.getElementById("openSettings");
 const closeSettingsBtn = document.getElementById("closeSettings");
 const settingsModal = document.getElementById("settingsModal");
 const languageSelect = document.getElementById("languageSelect");
+
+// Глобальная переменная для хранения переводов
+let translations = {};
 
 // Відкриття налаштувань
 openSettingsBtn.addEventListener("click", () => {
@@ -792,172 +839,75 @@ closeSettingsBtn.addEventListener("click", () => {
 });
 
 // Функція зміни мови
-function updateLanguage(lang) {
-  document.documentElement.lang = lang;
-  localStorage.setItem("playerLanguage", lang);
+function updateLanguage(translations, lang) {
+    document.documentElement.lang = lang;
+    localStorage.setItem("playerLanguage", lang);
 
-  document.querySelectorAll("[data-lang]").forEach(el => {
-      const key = el.getAttribute("data-lang");
-      if (translations[lang][key]) {
-          el.innerText = translations[lang][key];
-      }
-  });
+    document.querySelectorAll("[data-lang]").forEach(el => {
+        const key = el.getAttribute("data-lang");
+        if (translations[lang] && translations[lang][key]) {
+            el.innerText = translations[lang][key];
+        }
+    });
 
-  // Якщо відкритий тест Люшера, оновлюємо таймер
-  if (document.getElementById("luscherModal").style.display === "flex") {
-      document.getElementById("timer").textContent = translations[lang]["timerText"];
-  }
+    // Оновлення тестів
+    if (document.getElementById("luscherModal")?.style.display === "flex") {
+        document.getElementById("timer").textContent = translations[lang]["timerText"];
+    }
 
-  // Якщо відкритий MBTI тест, оновлюємо питання
-  if (document.getElementById("mbtiModal").style.display === "flex") {
-      displayMbtiQuestion();
-  }
+    if (document.getElementById("mbtiModal")?.style.display === "flex") {
+        displayMbtiQuestion();
+    }
 
-  // Якщо відкритий ритмічний тест, оновлюємо BPM і таймер
-  if (document.getElementById("rhythmModal").style.display === "flex") {
-      document.getElementById("rhythmResult").textContent = translations[lang]["bpm"];
-      document.getElementById("rhythmTimer").textContent = translations[lang]["timeLeft"];
-  }
+    if (document.getElementById("rhythmModal")?.style.display === "flex") {
+        document.getElementById("rhythmResult").textContent = translations[lang]["bpm"];
+        document.getElementById("rhythmTimer").textContent = translations[lang]["timeLeft"];
+    }
 }
 
+// Функція завантаження перекладів
+function loadTranslations() {
+    fetch('language.json')
+        .then(response => response.json())
+        .then(data => {
+            translations = data; // Збереження перекладів
+            const savedLanguage = localStorage.getItem("playerLanguage") || "uk";
+            updateLanguage(translations, savedLanguage);
+        })
+        .catch(error => console.error('Помилка завантаження JSON:', error));
+}
 
-// Об'єкт перекладів
-const translations = {
-  uk: {
-      addToPlaylist: "Додати до плейлисту",
-      viewArtist: "Переглянути артиста",
-      viewAlbum: "Переглянути альбом",
-      share: "Поширити",
-      menu: "Меню",
-      next: "Далі",
-      openPlayer: "Програвач",
-      settings: "Налаштування",
-      playerColor: "Колір плеєра",
-      language: "Мова",
-      setting: "Налаштування",
-      about: "Про YouPlayer",
-      close: "Закрити",
-      language: "Мова",
-      chooseOption: "Оберіть опцію",
-      rhythmTest: "Ритмічний тест",
-      rhythmTestTitle: "Ритмічний тест",
-      rhythmTestText: "Натискайте кнопку у бажаному ритмі:",
-      click: "Натискайте",
-      bpm: "BPM: --",
-      timeLeft: "Час: 0 с",
-      luscherTestTitle: "Тест Люшера",
-      luscherTest: "Тест Люшера",
-      luscherTestText: "Виберіть колір, який вам найбільш приємний:",
-      timerText: "10 секунд залишилося",
-      aboutTitle: "Про YouPlayer",
-      aboutText: "YouPlayer — ідеальний супутник для любителів музики. Керуйте своїми треками, створюйте персоналізовані плейлисти та насолоджуйтеся якісним звуком у будь-якій ситуації.",
-      appVersion: "Версія додатка: 0.6.9",
-      mbtiTest: "MBTI тест",
-      mbtiTestTitle: "MBTI тест",
-      mbtiResult: "Ваш MBTI тип:",
-      mbtiQuestion1: "Ви віддаєте перевагу спілкуванню з людьми чи проведенню часу на самоті?",
-      mbtiQuestion2: "Ви довіряєте фактам і конкретним деталям чи інтуїції й абстрактним ідеям?",
-      mbtiQuestion3: "Ви приймаєте рішення на основі логіки чи почуттів?",
-      mbtiQuestion4: "Ви віддаєте перевагу планувати чи імпровізувати?",
-      mbtiOptionE: "Екстраверсія (E)",
-      mbtiOptionI: "Інтроверсія (I)",
-      mbtiOptionS: "Сенсорика (S)",
-      mbtiOptionN: "Інтуїція (N)",
-      mbtiOptionT: "Логіка (T)",
-      mbtiOptionF: "Почуття (F)",
-      mbtiOptionJ: "Міркування (J)",
-      mbtiOptionP: "Сприйняття (P)"
-      
-  },
-  en: {
-      addToPlaylist: "Add to Playlist",
-      viewArtist: "View Artist",
-      viewAlbum: "View Album",
-      share: "Share",
-      next: "Next",
-      menu: "Menu",
-      openPlayer: "Player",
-      settings: "Settings",
-      playerColor: "Player Color:",
-      language: "Language:",
-      setting: "Setting",
-      close: "Close",
-      language: "Language",
-      about: "About YouPlayer",
-      chooseOption: "Choose an option",
-      rhythmTest: "Rhythm Test",
-      rhythmTestTitle: "Rhythm Test",
-      rhythmTestText: "Tap the button at your desired rhythm:",
-      bpm: "BPM: --",
-      click: "Click",
-      timeLeft: "Time: 0s",
-      luscherTestTitle: "Luscher Test",
-      luscherTest: "Luscher Test",
-      luscherTestText: "Choose the color you find most pleasant:",
-      timerText: "10 seconds left",
-      aboutTitle: "About YouPlayer",
-      aboutText: "YouPlayer is the perfect companion for music lovers. Manage your tracks, create personalized playlists and enjoy high-quality sound in any situation.",
-      appVersion: "App version: 0.6.9",
-      mbtiTest: "MBTI Test",
-      mbtiTestTitle: "MBTI Test",
-      mbtiResult: "Your MBTI type:",
-      mbtiQuestion1: "Do you prefer socializing or spending time alone?",
-      mbtiQuestion2: "Do you trust facts and details or intuition and abstract ideas?",
-      mbtiQuestion3: "Do you make decisions based on logic or feelings?",
-      mbtiQuestion4: "Do you prefer planning or improvising?",
-      mbtiOptionE: "Extraversion (E)",
-      mbtiOptionI: "Introversion (I)",
-      mbtiOptionS: "Sensing (S)",
-      mbtiOptionN: "Intuition (N)",
-      mbtiOptionT: "Thinking (T)",
-      mbtiOptionF: "Feeling (F)",
-      mbtiOptionJ: "Judging (J)",
-      mbtiOptionP: "Perceiving (P)"
-  }
-};
-
-// Встановлення збереженої мови
-const savedLanguage = localStorage.getItem("playerLanguage") || "uk";
-languageSelect.value = savedLanguage;
-updateLanguage(savedLanguage);
+// Завантажуємо переклади при запуску
+loadTranslations();
 
 // Обробник зміни мови
 languageSelect.addEventListener("change", () => {
-    updateLanguage(languageSelect.value);
+    const selectedLang = languageSelect.value;
+    updateLanguage(translations, selectedLang);
 });
 
 // Зміна кольору
 document.addEventListener("DOMContentLoaded", () => {
-  const playerColorPicker = document.getElementById("playerColor");
-  const playerContainer = document.querySelector(".container.active"); // Використовуємо querySelector
+    const playerColorPicker = document.getElementById("playerColor");
+    const playerContainer = document.querySelector(".container") || document.body;
 
-  if (!playerContainer) {
-      console.error("Елемент .container.active не знайдено!");
-      return;
-  }
+    // Функція зміни кольору
+    function updatePlayerColor(color) {
+        playerContainer.style.backgroundColor = color;
+        localStorage.setItem("playerColor", color);
+    }
 
-  // Функція зміни кольору
-  function updatePlayerColor(color) {
-      playerContainer.style.backgroundColor = color;
-      localStorage.setItem("playerColor", color);
-  }
+    // Завантажуємо збережений колір
+    const savedColor = localStorage.getItem("playerColor") || "#222";
+    playerContainer.style.backgroundColor = savedColor;
+    playerColorPicker.value = savedColor;
 
-  // Завантажуємо збережений колір
-  const savedColor = localStorage.getItem("playerColor") || "#222";
-  playerContainer.style.backgroundColor = savedColor;
-  playerColorPicker.value = savedColor;
-
-  // Оновлюємо колір при виборі користувачем
-  playerColorPicker.addEventListener("input", () => {
-      updatePlayerColor(playerColorPicker.value);
-  });
+    // Оновлюємо колір при виборі користувачем
+    playerColorPicker.addEventListener("input", () => {
+        updatePlayerColor(playerColorPicker.value);
+    });
 });
-
-
-
-// Setting (language change)
-
-
+// SETTING
 
 // Ініціалізація програвача
 init();

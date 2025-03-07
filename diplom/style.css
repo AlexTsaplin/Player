@@ -534,8 +534,16 @@ i:active {
  
  #chooseLuscher,
  #chooseMbtiTest,
- #chooseRhythmTest {
+ #chooseRhythmTest,
+ #chooseGenreTest {
      width: 190px;
+ }
+
+ #chooseLuscher,
+ #chooseMbtiTest,
+ #chooseRhythmTest,
+ #chooseGenreTest {
+    height: 41.55px;
  }
 
 /* ТЕСТ ЛЮШЕРА */
@@ -657,11 +665,13 @@ i:active {
     transform: scale(0.98);
     background: linear-gradient(45deg, #ff564c, #ff9a76);
 }
-
+#closeLuscherModal {
+    position: relative;
+    top: -10px; /* Задає зміщення кнопки вниз */
+}
 /* ТЕСТ ЛЮШЕРА */
 
 /* Ритм. Тест */
-
 .rhythm-test-container {
     position: absolute; 
     top: 0;
@@ -737,11 +747,9 @@ i:active {
     position: absolute;
     bottom: 25px;
 }
-
 /* Ритм. Тест */
 
 /* MBTI тест */
-
 .mbti-test-container {
     position: absolute; 
     top: 10;
@@ -836,9 +844,140 @@ i:active {
     transform: scale(0.98);
     background: linear-gradient(45deg, #ff564c, #ff9a76);
 }
-
 /* MBTI тест */
 
+/* За жанрами */
+/* ТЕСТ ПО ЖАНРАМ */
+
+.genre-test-container {
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.8); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 100; 
+}
+
+.test-content {
+    background-color: #be9d9d;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Контейнер для кнопок жанрів */
+.genre-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Кнопки жанрів */
+.genre-choice {
+    width: 100px;  /* Фіксована ширина, щоб відповідала круглим кнопкам тесту Люшера */
+    height: 35px;  /* Аналогічна висота */
+    border-radius: 20px; /* Закруглені краї для гарного вигляду */
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #ff564c;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.genre-choice:hover {
+    background: #ff9a76;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.genre-choice:active {
+    transform: scale(0.98);
+    background: #ff564c;
+}
+
+/* Підвал */
+.test-footer {
+    position: absolute;
+    bottom: 140px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.test-footer button {
+    padding: 10px 20px;
+    font-size: 18px;
+    color: white;
+    background-color: rgba(82, 82, 82, 0.8);
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.test-footer button:hover {
+    background-color: rgba(168, 147, 147, 0.9);
+    transform: scale(1.05);
+}
+
+.test-footer button:focus {
+    outline: none;
+}
+
+.test-footer button:active {
+    background-color: rgba(0, 0, 0, 1);
+}
+
+/* Кнопка відкриття тесту "За жанрами" */
+#chooseGenreTest {
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+}
+
+#chooseGenreTest:hover {
+    background: linear-gradient(45deg, #ff9a76, #ff564c);
+    transform: scale(1.03);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+#chooseGenreTest:active {
+    transform: scale(0.98);
+    background: linear-gradient(45deg, #ff564c, #ff9a76);
+}
+#closeGenreTestModal {
+    position: relative;
+    top: 15px; /* Задає зміщення кнопки вниз */
+  }
+
+/* За жанрами */
 
 /* Вікно вибору варіантів */
 .choice-container {
@@ -897,7 +1036,7 @@ i:active {
 
 .choice-footer {
     position: absolute;
-    bottom: 142px;
+    bottom: 120px;
     width: 100%;
     display: flex;
     justify-content: center;

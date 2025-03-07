@@ -46,7 +46,6 @@
 			</div>
 		</div>
 		
-	
 		<!-- Модальное окно Ритмічного тесту -->
 		<div id="rhythmModal" class="luscher-test-container" style="display: none;">
 			<div class="test-content">
@@ -72,13 +71,35 @@
 				<button id="closeMbtiModal" style="display: none;" data-lang="close">Закрити</button>
 			</div>
 		</div>
-		
-		
+
+		<!-- Модальне вікно тесту "За жанрами" -->
+		<div id="genreTestModal" class="genre-test-container" style="display: none;">
+			<div class="test-content">
+				<p data-lang="genreTestText">Оберіть жанр, який вам подобається:</p>
+				<div class="genre-buttons">
+					<button class="genre-choice" data-lang="rock" data-genre="rock">Рок</button>
+					<button class="genre-choice" data-lang="pop" data-genre="pop">Поп</button>
+					<button class="genre-choice" data-lang="hiphop" data-genre="hiphop">Хіп-хоп</button>
+					<button class="genre-choice" data-lang="electronic" data-genre="electronic">Електроніка</button>
+					<button class="genre-choice" data-lang="rap" data-genre="rap">Реп</button>
+					<button class="genre-choice" data-lang="indie" data-genre="indie">Інді</button>
+					<button class="genre-choice" data-lang="phonk" data-genre="phonk">Фонк</button>
+					<button class="genre-choice" data-lang="metal" data-genre="metal">Метал</button>
+				</div>
+			</div>
+			<div class="test-footer">
+				<button id="closeGenreTestModal" data-lang="close">Закрити</button>
+			</div>
+		</div>
+
+
+				
 		<!-- Модальное окно промпта -->
 		<div id="choiceModal" class="choice-container" style="display: none;">
 			<div class="choice-content">
 				<h2 data-lang="chooseOption">Оберіть опцію</h2>
 				<div class="choice-buttons">
+					<button id="chooseGenreTest" data-lang="genreTest">За жанрами</button>
 					<button id="chooseLuscher" data-lang="luscherTest">Тест Люшера</button>
 					<button id="chooseMbtiTest" data-lang="mbtiTest">MBTI тест</button>
 					<button id="chooseRhythmTest" data-lang="rhythmTest">Ритмічний тест</button>		
