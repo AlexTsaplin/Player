@@ -1,62 +1,101 @@
-// Инициализация пустого списка песен
+// Ініціалізація порожнього списку пісень
 let songs = [];
-let currentSong = -1; // Начинаем с первой песни
+let currentSong = -1; 
 
-// Функция для загрузки JSON с песнями
-function loadSongs() {
-  fetch('songs.json')
-    .then(response => {
-      if (!response.ok) throw new Error("Ошибка загрузки данных");
-      return response.json();
-    })
-    .then(data => {
-      songs = data;
-      if (songs.length > 0) {
-        init(); // Запускаем инициализацию только после загрузки песен
-      } else {
-        console.error('Список песен пуст');
-      }
-    })
-    .catch(error => console.error('Ошибка загрузки списка песен:', error));
+// Глобальна змінна для зберігання відкоригованих кольорів
+let correctedColors = {};
+
+// Функція калібрування кольору на пристрої
+function detectColorCorrection() {
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d", { willReadFrequently: true }); 
+    canvas.width = 100;
+    canvas.height = 100;
+
+    // Задаємо еталонні кольори
+    const testColors = {
+        white: "rgb(255, 255, 255)",
+        black: "rgb(0, 0, 0)",
+        red: "rgb(255, 0, 0)",
+        green: "rgb(0, 255, 0)",
+        blue: "rgb(0, 0, 255)",
+        purple: "rgb(128, 0, 128)",
+        brown: "rgb(165, 42, 42)",
+        yellow: "rgb(255, 255, 0)"
+    };
+
+    for (let color in testColors) {
+        ctx.fillStyle = testColors[color];
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        let imageData = ctx.getImageData(50, 50, 1, 1).data;
+        correctedColors[color] = `rgb(${imageData[0]}, ${imageData[1]}, ${imageData[2]})`;
+    }
 }
 
-// Инициализация плеера
+// Викликаємо функцію після завантаження сторінки
+window.onload = function() {
+    detectColorCorrection();
+    loadSongs(); 
+};
+
+// Функція для завантаження JSON з піснями
+async function loadSongs() {
+    try {
+        const response = await fetch('songs.json');
+        if (!response.ok) throw new Error("Ошибка загрузки данных");
+        songs = await response.json();
+        
+        if (songs.length > 0) {
+            init(); // Запускаємо ініціалізацію лише після завантаження пісень
+        } else {
+            console.error('Список песен пуст');
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки списка песен:', error);
+    }
+}
+
+// Ініціалізація плеєра
 function init() {
-  updatePlaylist(songs);
+    updatePlaylist(songs);
 
-  // Если песня не выбрана, очищаем информацию
-  if (currentSong === -1) {
-    infoWrapper.innerHTML = `<h2></h2><h3></h3>`;
-    currentSongTitle.innerHTML = "";
-  }
+    // Якщо пісню не вибрано, очищаємо інформацію
+    if (currentSong === -1) {
+        infoWrapper.innerHTML = `<h2></h2><h3></h3>`;
+        currentSongTitle.innerHTML = "";
+    }
 }
 
-// Функция для загрузки песни
+// Фільтрування пісень за кольором з урахуванням корекції
+function filterSongsByColor(color) {
+    const correctedColor = correctedColors[color] || color;
+    const filteredSongs = songs.filter(song => song.colors && song.colors[correctedColor]);
+    updatePlaylist(filteredSongs);
+}
+
+// Функція для завантаження пісні
 function loadSong(num) {
-  if (num === -1 || !songs[num]) {
-    infoWrapper.innerHTML = `<h2></h2><h3></h3>`;
-    currentSongTitle.innerHTML = "";
-    return;
-  }
+    if (num === -1 || !songs[num]) {
+        infoWrapper.innerHTML = `<h2></h2><h3></h3>`;
+        currentSongTitle.innerHTML = "";
+        return;
+    }
 
-  // Останавливаем предыдущее воспроизведение
-  audio.pause();
-  audio.src = "";
-  audio.load();
-  audio.currentTime = 0;
+    // Зупиняємо попереднє відтворення
+    audio.pause();
+    audio.src = "";
+    audio.load();
+    audio.currentTime = 0;
 
-  infoWrapper.innerHTML = `<h2>${songs[num].title}</h2><h3>${songs[num].artist}</h3>`;
-  currentSongTitle.innerHTML = songs[num].title;
-  coverImage.style.backgroundImage = `url(data/image/${songs[num].img_src})`;
+    infoWrapper.innerHTML = `<h2>${songs[num].title}</h2><h3>${songs[num].artist}</h3>`;
+    currentSongTitle.innerHTML = songs[num].title;
+    coverImage.style.backgroundImage = `url(${baseImagePath}${songs[num].img_src})`;
 
-  // Загружаем новую песню
-  audio.src = `${baseAudioPath}${songs[num].src}`;
-  audio.load();
-  currentFavourite.classList.toggle("active", favourites.includes(num));
+    // Завантажуємо нову пісню
+    audio.src = `${baseAudioPath}${songs[num].src}`;
+    audio.load();
+    currentFavourite.classList.toggle("active", favourites.includes(num));
 }
-
-// Запускаем загрузку песен из JSON
-loadSongs();
 
 const playerContent = document.querySelector(".player-content");
 const openPlayerBtn = document.getElementById("openPlayer");
@@ -98,7 +137,7 @@ const choiceModal = document.getElementById("choiceModal");
 const chooseLuscherBtn = document.getElementById("chooseLuscher");
 const closeChoiceModalBtn = document.getElementById("closeChoiceModal");
 
-// --- За жанрами --- //
+// --- ЗА ЖАНРАМИ --- //
 const chooseGenreTestBtn = document.getElementById("chooseGenreTest");
 const genreTestModal = document.getElementById("genreTestModal");
 const closeGenreTestModalButton = document.getElementById("closeGenreTestModal");
@@ -140,21 +179,21 @@ chooseGenreTestBtn.addEventListener("click", () => {
 
 // Обробник для кнопки закриття тесту "За жанрами"
 closeGenreTestModalButton.addEventListener("click", closeGenreTestModal);
-// --- By genre --- //
+// --- BY GENRE --- //
 
-// --- Тест Люшера --- //
+// --- ТЕСТ ЛЮШЕРА --- //
 const luscherModal = document.getElementById("luscherModal");
 const closeLuscherModalButton = document.getElementById("closeLuscherModal");
 const colorButtons = document.querySelectorAll(".color-choice");
-const timerElement = document.getElementById("timer"); // Элемент для отображения таймера
-let luscherTimer, interval; // Таймеры для закрытия модального окна и обратного отсчета
+const timerElement = document.getElementById("timer"); 
+let luscherTimer, interval; // Таймери для закриття модального вікна та зворотного відліку
 
-// Функция для запуска таймера
+// Функція для запуску таймера
 function startLuscherTimer(duration) {
     clearTimeout(luscherTimer);
     clearInterval(interval);
 
-    let remainingTime = duration / 1000; // В секундах
+    let remainingTime = duration / 1000; 
     interval = setInterval(() => {
         remainingTime > 0 
             ? timerElement.textContent = `${--remainingTime} секунд залишилося` 
@@ -164,14 +203,14 @@ function startLuscherTimer(duration) {
     luscherTimer = setTimeout(endTimer, duration);
 }
 
-// Завершение таймера
+// Завершення таймера
 function endTimer() {
     clearInterval(interval);
     timerElement.textContent = `0 секунд залишилося`;
     closeLuscherModal();
 }
 
-// Закрытие окна Люшера
+// Закриття вікна Люшера
 function closeLuscherModal() {
     luscherModal.style.display = "none";
     clearTimeout(luscherTimer);
@@ -180,7 +219,7 @@ function closeLuscherModal() {
 
 closeLuscherModalButton.addEventListener("click", closeLuscherModal);
 
-// Обработка выбора цвета
+// Обробка вибору кольору
 colorButtons.forEach(button => {
     button.addEventListener("click", () => {
         filterSongsByColor(button.getAttribute("data-color"));
@@ -188,19 +227,20 @@ colorButtons.forEach(button => {
     });
 });
 
-// Открытие окна Люшера
+// Відкриття вікна Люшера
 function openLuscherModal() {
     luscherModal.style.display = "flex";
-    startLuscherTimer(10000); // 10 секунд
+    startLuscherTimer(10000); 
 }
 
-// Фильтрация песен по цвету
+// Фільтрування пісень за кольором
 function filterSongsByColor(color) {
-  // Приводим название цвета к нижнему регистру, если в объекте ключи в нижнем регистре
+
+  // Наводимо назву кольору до нижнього регістру, якщо в об'єкті ключі в нижньому регістрі
   const colorKey = color.toLowerCase();
   const filteredSongs = songs
       .filter(song => song.colors && song.colors[colorKey] !== undefined)
-      .sort((a, b) => b.colors[colorKey] - a.colors[colorKey]); // Сортировка по убыванию коэффициента
+      .sort((a, b) => b.colors[colorKey] - a.colors[colorKey]); // Сортування за зменшенням коефіцієнта
 
   updatePlaylist(filteredSongs);
 
@@ -208,12 +248,11 @@ function filterSongsByColor(color) {
       playlistContainer.innerHTML = '<tr><td colspan="4">На жаль, немає пісень з таким кольором.</td></tr>';
   }
 }
+// --- ТЕСТ ЛЮШЕРА --- //
 
-// --- Тест Люшера --- //
-
-// --- MBTI тест --- //
-// Глобальные переменные для песен (предполагается, что где‑то есть функция loadSongs, которая загружает данные в songs)
-let songsWithMbti = [];     // Будет вычислен после загрузки песен
+// --- MBTI ТЕСТ --- //
+// Глобальні змінні для пісень (передбачається, що є функція loadSongs, яка завантажує дані в songs)
+let songsWithMbti = [];     
 
 const mbtiTypes = [
   "ISTJ", "ISFJ", "INFJ", "INTJ",
@@ -222,12 +261,12 @@ const mbtiTypes = [
   "ESTJ", "ESFJ", "ENFJ", "ENTJ"
 ];
 
-// Функция для вычисления массива песен с MBTI
+// Функція для обчислення масиву пісень з MBTI
 function computeSongsWithMbti() {
   return songs.map(song => {
     return {
       ...song,
-      // Если у песни уже задан MBTI (и не пустой), оставляем его, иначе назначаем циклически
+      // Якщо у пісні вже заданий MBTI (і не порожній), залишаємо його, інакше призначаємо циклічно
       mbti: song.mbti && song.mbti.trim() !== ""
             ? song.mbti.trim().toUpperCase()
             : mbtiTypes[song.id % mbtiTypes.length]
@@ -235,7 +274,7 @@ function computeSongsWithMbti() {
   });
 }
 
-// После загрузки песен (например, в loadSongs) необходимо пересчитать songsWithMbti:
+// Після завантаження пісень (наприклад, у loadSongs) необхідно перерахувати songsWithMbti
 function loadSongs() {
   fetch('songs.json')
     .then(response => {
@@ -244,10 +283,10 @@ function loadSongs() {
     })
     .then(data => {
       songs = data;
-      // Пересчитываем songsWithMbti после загрузки песен:
+      // Перераховуємо songsWithMbti після завантаження пісень
       songsWithMbti = computeSongsWithMbti();
       if (songs.length > 0) {
-        init(); // Инициализируем плеер
+        init(); 
       } else {
         console.error('Список песен пуст');
       }
@@ -255,7 +294,7 @@ function loadSongs() {
     .catch(error => console.error('Ошибка загрузки списка песен:', error));
 }
 
-// Массив вопросов MBTI-теста
+// Масив питань MBTI-тесту
 const mbtiQuestions = [
   {
     question: "mbtiQuestion1",
@@ -287,8 +326,7 @@ const mbtiQuestions = [
   }
 ];
 
-
-// Функция фильтрации песен по MBTI типу
+// Функція фільтрації пісень за типом MBTI
 function filterSongsByMbti(mbtiType) {
   mbtiType = mbtiType.trim().toUpperCase();
   console.log("Filtering songs for MBTI:", mbtiType);
@@ -299,22 +337,22 @@ function filterSongsByMbti(mbtiType) {
   updatePlaylist(filteredSongs);
 }
 
-// Функция обновления плейлиста (пример)
+// Функція оновлення плейлиста (приклад)
 function updatePlaylist(songsList) {
   document.getElementById("playlist").innerHTML =
     songsList.map(song => `<div>${song.title} (${song.mbti})</div>`).join("");
 }
 
-// Глобальные переменные для MBTI-теста
+// Глобальні змінні для тесту MBTI
 let mbtiCurrentQuestionIndex = 0;
 let mbtiAnswers = [];
 let selectedMbtiAnswer = null;
 
-// Функция открытия MBTI-теста
+// Функція відкриття MBTI-тесту
 function openMbtiTest() {
   const mbtiModal = document.getElementById("mbtiModal");
   mbtiModal.style.display = "flex";
-  // Скрываем кнопку закрытия только для MBTI-теста
+// Приховуємо кнопку закриття тільки для тесту MBTI
   document.getElementById("closeMbtiModal").style.display = "none";
   
   mbtiCurrentQuestionIndex = 0;
@@ -325,12 +363,12 @@ function openMbtiTest() {
   document.getElementById("mbtiNextButton").disabled = true;
 }
 
-// Функция отображения текущего вопроса MBTI-теста
+// Функція відображення поточного питання тесту MBTI
 function displayMbtiQuestion() {
   const questionContainer = document.getElementById("mbtiQuestionContainer");
-  questionContainer.innerHTML = ""; // Очищаємо контейнер
+  questionContainer.innerHTML = ""; 
 
-  const lang = localStorage.getItem("playerLanguage") || "uk"; // Додаємо визначення `lang`
+  const lang = localStorage.getItem("playerLanguage") || "uk"; 
 
   if (mbtiCurrentQuestionIndex < mbtiQuestions.length) {
       const currentQ = mbtiQuestions[mbtiCurrentQuestionIndex];
@@ -375,7 +413,7 @@ function displayMbtiQuestion() {
   }
 }
 
-// Обработчик кнопки "Далее"
+// Обробник кнопки "Далі"
 document.getElementById("mbtiNextButton").addEventListener("click", () => {
   if (selectedMbtiAnswer) {
     mbtiAnswers.push(selectedMbtiAnswer);
@@ -386,13 +424,13 @@ document.getElementById("mbtiNextButton").addEventListener("click", () => {
   }
 });
 
-// Обработчик кнопки "Закрыть" в MBTI-тесте
+// Обробник кнопки "Закрити" у MBTI-тесті
 document.getElementById("closeMbtiModal").addEventListener("click", () => {
   const mbtiModal = document.getElementById("mbtiModal");
   mbtiModal.style.display = "none";
 });
 
-// Обработчик для кнопки открытия MBTI-теста из окна выбора тестов
+// Обробник для кнопки відкриття тесту MBTI з вікна вибору тестів
 document.getElementById("chooseMbtiTest")?.addEventListener("click", () => {
   const choiceModal = document.getElementById("choiceModal");
   if (choiceModal) {
@@ -400,13 +438,13 @@ document.getElementById("chooseMbtiTest")?.addEventListener("click", () => {
   }
   openMbtiTest();
 });
-// --- MBTI тест --- //
+// --- MBTI TEST --- //
 
-// --- Ритм. тест --- //
-// Предполагается, что глобальный массив songs уже загружен (например, через loadSongs)
+// --- РИТМ. ТЕСТ --- //
+// Передбачається, що глобальний масив songs вже завантажений (наприклад, через loadSongs)
 let songsWithTemp = [];
 
-// Функция для визначення "temp" за кольором
+// Функція для визначення "temp" за кольором
 function getTempByColor(color) {
   if (!color) return "neutral";
   const energeticColors = ["red", "yellow", "purple", "blue"];
@@ -416,7 +454,7 @@ function getTempByColor(color) {
   return "neutral";
 }
 
-// Функция для обчислення нового масиву пісень з властивістю temp.
+// Функція для обчислення нового масиву пісень із властивістю temp.
 // Викликайте її після завантаження пісень (наприклад, у loadSongs).
 function computeSongsWithTemp() {
   songsWithTemp = songs.map(song => {
@@ -430,7 +468,6 @@ function computeSongsWithTemp() {
     return { ...song, temp: getTempByColor(dominantColor) };
   });
 }
-
 
 function filterSongsByRhythm(bpm) {
   const tempMap = {
@@ -522,20 +559,20 @@ document.getElementById("chooseRhythmTest")?.addEventListener("click", () => {
   computeSongsWithTemp();
   openRhythmModal();
 });
+// --- РИТМ. ТЕСТ --- //
 
-// --- Ритм. тест --- //
-
-// Открыть выбор опций
+// Відкрити вибір опцій
 openPlayerBtn.addEventListener("click", () => {
     choiceModal.style.display = "flex";
 });
 
-// Закрыть выбор опций
+// Закрити вибір опцій
 closeChoiceModalBtn.addEventListener("click", () => {
     choiceModal.style.display = "none";
 });
 
-// Выбор теста Люшера
+
+// Вибір тесту Люшера
 chooseLuscherBtn.addEventListener("click", () => {
     choiceModal.style.display = "none";
     openLuscherModal();
@@ -550,7 +587,7 @@ let playing = false,
 audio.volume = volumeControl.value;
 volumePercentage.innerText = `${Math.floor(volumeControl.value * 100)}%`;
 
-// переход к плееру
+// Перехід до плеєра
 openPlayerBtn.addEventListener("click", () => {
   mainMenu.style.display = "none"; 
   playerContent.style.display = "block"; 
@@ -558,7 +595,7 @@ openPlayerBtn.addEventListener("click", () => {
   container.classList.add("active");
 });
 
-//возвращение в меню
+// Повернення в меню
 backToMenuBtn.addEventListener("click", () => {
   mainMenu.style.display = "block"; 
 
@@ -569,38 +606,38 @@ backToMenuBtn.addEventListener("click", () => {
   playPauseBtn.classList.replace("fa-pause", "fa-play");
   playing = false; // Оновлюємо стан
 
-  // Скрываем интерфейс плеера
+  // Приховуємо інтерфейс програвача
   playerContent.style.display = "none"; 
   playerBody.style.display = "none"; 
 
-  // Снимаем класс active у контейнера
+  // Знімаємо клас active у контейнера
   container.classList.remove('active');
 
-  // Скрываем поле поиска и обновляем плейлист
+  // Приховуємо поле пошуку та оновлюємо плейлист
   searchInput.style.display = 'none';
   searchInput.value = '';
   updatePlaylist(songs);
 });
 
-// Функция для открытия окна с информацией о треке
+// Функція для відкриття вікна з інформацією про трек
 function openTrackInfo() {
   trackInfoModal.style.display = 'block';
-  setTimeout(() => trackInfoModal.style.opacity = '1', 0); // Плавное появление
+  setTimeout(() => trackInfoModal.style.opacity = '1', 0); 
   trackTitle.innerText = songs[currentSong].title;
   trackArtist.innerText = songs[currentSong].artist;
   trackCover.style.backgroundImage = `url(${baseImagePath}${songs[currentSong].img_src})`;
 }
 
-// Функция для закрытия окна с информацией о треке
+// Функція для закриття вікна з інформацією про трек
 function closeTrackInfo() {
-  trackInfoModal.style.opacity = '0'; // Плавное исчезновение
-  setTimeout(() => trackInfoModal.style.display = 'none', 300); // Скрыть после завершения анимации
+  trackInfoModal.style.opacity = '0'; 
+  setTimeout(() => trackInfoModal.style.display = 'none', 300); 
 }
 
-// Обработчик клика по кнопке опций
+// Обробник кліка за кнопкою опцій
 optionBtn.addEventListener('click', openTrackInfo);
 
-// Обработчик клика по стрелочке для закрытия окна
+// Обробник кліка по стрілочці для закриття вікна
 closeTrackInfoBtn.addEventListener('click', closeTrackInfo);
 
 // Функція для оновлення громкості
@@ -610,7 +647,7 @@ function updateVolume() {
   audio.volume = volumeControl.value;
 }
 
-// Обновление процентов при изменении громкости
+// Оновлення відсотків за зміни гучності
 volumeControl.addEventListener('input', updateVolume);
 
 // Функція для пошуку пісень
@@ -618,7 +655,7 @@ searchInput.addEventListener('input', () => {
   const query = searchInput.value.toLowerCase();
   const filteredSongs = songs.filter(song =>
     song.title.toLowerCase().includes(query) || 
-    song.artist.toLowerCase().includes(query)  // Добавлен поиск по исполнителю
+    song.artist.toLowerCase().includes(query)  
   );
   updatePlaylist(filteredSongs);
 });
@@ -810,7 +847,7 @@ progressBar.addEventListener("click", (e) => {
   audio.currentTime = (clickX / width) * audio.duration;
 });
 
-//про програму
+//Про програму
 document.getElementById("openAboutApp").addEventListener("click", function () {
   document.getElementById("aboutAppModal").style.display = "flex";
 });
@@ -908,6 +945,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 // SETTING
+
+// Завантаження пісень
+
+// Downloading a song
 
 // Ініціалізація програвача
 init();

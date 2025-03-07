@@ -36,12 +36,12 @@ body {
 }
 
 .small-artist {
-    font-size: 8px; /* або менше, залежно від вигляду */
+    font-size: 8px; 
     opacity: 0.8;
 }
 
 #playerContainer {
-    background-color: var(--player-color, #222); /* Значення за замовчуванням */
+    background-color: var(--player-color, #222); 
     transition: background 0.3s ease;
 }
 
@@ -52,7 +52,6 @@ body {
     overflow: hidden;
     background: #be9d9d;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
-    
 }
 
 .container #backToMenu {
@@ -60,29 +59,27 @@ body {
 }
 
 #backToMenu {
-    background-color: transparent; /* Прозрачный фон */
-    color: white; /* Белый текст */
-    font-size: 18px; /* Размер шрифта */
-    padding: 12px 24px; /* Отступы */
-    border: 2px solid white; /* Белая рамка */
-    border-radius: 8px; /* Закругленные углы */
-    cursor: pointer; /* Делаем курсор указателем */
+    background-color: transparent; 
+    color: white; 
+    font-size: 18px; 
+    padding: 12px 24px; 
+    border: 2px solid white;
+    border-radius: 8px; 
+    cursor: pointer; 
     transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
     display: block;
-    margin: 20px auto; /* Центрирование кнопки */
-    box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.1); /* Легкая белая тень */
+    margin: 20px auto; 
+    box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.1); 
 }
 
-/* Эффект при наведении */
 #backToMenu:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Полупрозрачный фон */
-    transform: scale(1.05); /* Легкое увеличение */
-    border-color: #ddd; /* Светлее при наведении */
+    background-color: rgba(255, 255, 255, 0.2); 
+    transform: scale(1.05); 
+    border-color: #ddd; 
 }
 
-/* Эффект при нажатии */
 #backToMenu:active {
-    transform: scale(0.98); /* Легкое уменьшение */
+    transform: scale(0.98); 
 }
 
 
@@ -117,13 +114,13 @@ i:active {
 }
 
 .search-btn {
-    display: none; /* Hide search icon by default */
-    margin: 0; /* Убираем отступы, чтобы избежать смещения */
-    padding: 0; /* Убираем отступы, чтобы избежать смещения */
+    display: none; 
+    margin: 0; 
+    padding: 0; 
 }
 
 .container.active .search-btn {
-    display: inline-block; /* Show search icon when container is active */
+    display: inline-block; 
 }
 
 .search-input {
@@ -329,7 +326,7 @@ i:active {
 #repeat:hover,
 #option:hover,
 #closeAboutApp:hover {
-    color: #ff564c; /* Цвет при наведении */
+    color: #ff564c; 
 }
 
 .bar {
@@ -477,15 +474,14 @@ i:active {
     background-color: rgba(255, 255, 255, 0.4); 
   }
   
-
 /* Menu */
 .main-menu {
     text-align: center;
     padding: 20px;
     width: 100%;
-    display: block; /* Изначально меню должно быть видимо */
-  position: relative; /* Или absolute, в зависимости от вашей структуры */
-  z-index: 10; /* Убедитесь, что меню поверх других элементов */
+    display: block; 
+  position: relative; 
+  z-index: 10; 
  }
  
  .main-menu h1 {
@@ -504,30 +500,29 @@ i:active {
  }
  
  .menu-list button {
-    width: 200px; /* Установите фиксированную ширину для всех кнопок */
+    width: 200px; 
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
     border: none;
-    padding: 15px 0; /* Вертикальные отступы, горизонтальные отступы убраны */
+    padding: 15px 0; 
     font-size: 1.2rem;
     border-radius: 30px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    text-align: center; /* Центрирование текста внутри кнопки */
+    text-align: center; 
     
 }
 
- 
- .menu-list button:hover {
+.menu-list button:hover {
     background-color: rgba(255, 255, 255, 0.2);
     transform: scale(1.05);
  }
  
- .player-content {
+.player-content {
     display: none;
   }
  
- .player-content.active {
+.player-content.active {
     display: block;
  }
  
@@ -547,7 +542,6 @@ i:active {
  }
 
 /* ТЕСТ ЛЮШЕРА */
-
 .luscher-test-container {
     position: absolute; 
     top: 0;
@@ -562,16 +556,14 @@ i:active {
     z-index: 100; 
 }
 
-/* Обеспечиваем относительное позиционирование контейнера MBTI-теста */
 #mbtiModal .test-content {
     position: relative;
-    padding-bottom: 60px; /* Резерв для кнопки, можно настроить по необходимости */
+    padding-bottom: 60px; 
 }
 
-/* Позиционирование кнопки закрытия MBTI-теста */
 #closeMbtiModal {
     position: absolute;
-    bottom: 5%;      /* Располагается на 5% от низа контейнера */
+    bottom: 5%;     
     left: 50%;
     transform: translateX(-50%);
     padding: 10px 20px;
@@ -588,7 +580,7 @@ i:active {
     background-color: #be9d9d;
     padding: 20px;
     border-radius: 10px;
-    width: 80%; /* Максимальная ширина */
+    width: 80%; 
     max-width: 400px;
     display: flex;
     flex-direction: column;
@@ -599,7 +591,7 @@ i:active {
 
 .color-buttons {
     display: flex;
-    flex-wrap: wrap; /* Переносит элементы на следующую строку, если они не помещаются */
+    flex-wrap: wrap; 
     justify-content: center;
     margin-top: 20px;
 }
@@ -625,21 +617,21 @@ i:active {
     padding: 10px 20px;
     font-size: 18px;
     color: white;
-    background-color: rgba(82, 82, 82, 0.8); /* Темный фон для кнопки */
+    background-color: rgba(82, 82, 82, 0.8); 
     border: none;
-    border-radius: 7px; /* Закругленные углы */
+    border-radius: 7px; 
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Плавные эффекты */
+    transition: background-color 0.3s ease, transform 0.2s ease; 
 }
 .test-footer button:hover {
-    background-color: rgba(168, 147, 147, 0.9); /* Цвет при наведении */
-    transform: scale(1.05); /* Легкое увеличение кнопки */
+    background-color: rgba(168, 147, 147, 0.9); 
+    transform: scale(1.05); 
 }
 .test-footer button:focus {
-    outline: none; /* Убираем обводку при фокусе */
+    outline: none; 
 }
 .test-footer button:active {
-    background-color: rgba(0, 0, 0, 1); /* Цвет при нажатии */
+    background-color: rgba(0, 0, 0, 1); 
 }
 
 #chooseLuscher {
@@ -667,7 +659,7 @@ i:active {
 }
 #closeLuscherModal {
     position: relative;
-    top: -10px; /* Задає зміщення кнопки вниз */
+    top: -10px; 
 }
 /* ТЕСТ ЛЮШЕРА */
 
@@ -847,8 +839,6 @@ i:active {
 /* MBTI тест */
 
 /* За жанрами */
-/* ТЕСТ ПО ЖАНРАМ */
-
 .genre-test-container {
     position: absolute; 
     top: 0;
@@ -876,7 +866,6 @@ i:active {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 
-/* Контейнер для кнопок жанрів */
 .genre-buttons {
     display: flex;
     flex-wrap: wrap;
@@ -884,11 +873,10 @@ i:active {
     margin-top: 20px;
 }
 
-/* Кнопки жанрів */
 .genre-choice {
-    width: 100px;  /* Фіксована ширина, щоб відповідала круглим кнопкам тесту Люшера */
-    height: 35px;  /* Аналогічна висота */
-    border-radius: 20px; /* Закруглені краї для гарного вигляду */
+    width: 100px;  
+    height: 35px;  
+    border-radius: 20px; 
     margin: 10px;
     border: none;
     cursor: pointer;
@@ -914,7 +902,6 @@ i:active {
     background: #ff564c;
 }
 
-/* Підвал */
 .test-footer {
     position: absolute;
     bottom: 140px;
@@ -948,7 +935,6 @@ i:active {
     background-color: rgba(0, 0, 0, 1);
 }
 
-/* Кнопка відкриття тесту "За жанрами" */
 #chooseGenreTest {
     padding: 10px 20px;
     font-size: 18px;
@@ -974,7 +960,7 @@ i:active {
 }
 #closeGenreTestModal {
     position: relative;
-    top: 15px; /* Задає зміщення кнопки вниз */
+    top: 15px; 
   }
 
 /* За жанрами */
@@ -1065,12 +1051,12 @@ i:active {
 
 /* Options selection window */
 
-/* Модальное окно "про YouPlayer" */
+/* Модальне вікно "про YouPlayer" */
 .player-container {
     position: relative;
     width: 100%;
-    height: 100%; /* Плеер занимает всю доступную область */
-    overflow: hidden; /* Прячем все, что выходит за границы плеера */
+    height: 100%; 
+    overflow: hidden; 
   }
   
   .about-app-modal {
@@ -1079,7 +1065,7 @@ i:active {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* Полупрозрачный черный фон */
+    background-color: rgba(0, 0, 0, 0.8); 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1091,18 +1077,18 @@ i:active {
   }
   
   .about-app-content {
-    background-color: rgba(255, 255, 255, 0.1); /* Полупрозрачный фон */
+    background-color: rgba(255, 255, 255, 0.1); 
     padding: 30px;
     border-radius: 16px;
     width: 100%;
-    height: 100%; /* Занимает всю высоту плеера */
-    max-width: 100%; /* Занимает всю ширину плеера */
+    height: 100%; 
+    max-width: 100%; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     color: white;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
-    overflow-y: auto; /* Добавляем прокрутку, если контент не помещается */
+    overflow-y: auto; 
   }
   
   .about-app-content h2 {
@@ -1119,17 +1105,17 @@ i:active {
   }
 
   .close-btn {
-    font-size: 20px; /* Размер стрелки */
+    font-size: 20px; 
     color: white;
     cursor: pointer;
     position: absolute;
     top: 30px;
     left: 30px;
-    transition: transform 0.3s; /* Плавное увеличение */
+    transition: transform 0.3s; 
   }
   
   .close-btn:hover {
-    transform: scale(1.2); /* Увеличиваем стрелку при наведении */
+    transform: scale(1.2); 
   }
   
   .about-app-actions {
@@ -1137,7 +1123,7 @@ i:active {
   }
   
   .action-btn {
-    background-color: rgba(255, 255, 255, 0.2); /* Полупрозрачный фон */
+    background-color: rgba(255, 255, 255, 0.2); 
     color: white;
     padding: 12px 25px;
     border: none;
@@ -1150,11 +1136,9 @@ i:active {
   }
   
   .action-btn:hover {
-    background-color: rgba(255, 255, 255, 0.4); /* Подсветка при наведении */
+    background-color: rgba(255, 255, 255, 0.4); 
   }
-  
-
-/* Модальное окно настроек */
+/* Модальне вікно про YouPlayer */
 
 /* Налаштування */
 .settings-container {
@@ -1173,8 +1157,8 @@ i:active {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 200px; /* Фіксована ширина */
-    min-height: 200px; /* Мінімальна висота */
+    width: 200px; 
+    min-height: 200px; 
 }
 
 .settings-content select {
@@ -1197,7 +1181,6 @@ i:active {
     background: #ff1e3c;
 }
 
-/* Показуємо модальне вікно */
 .settings-container.active {
     opacity: 1;
     visibility: visible;
@@ -1224,7 +1207,7 @@ i:active {
     cursor: pointer;
     transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
-    width: 160px; /* Щоб кнопка займала всю ширину контейнера */
+    width: 160px; 
     margin-top: 15px;
 }
 
@@ -1250,5 +1233,4 @@ i:active {
 .color-picker:hover {
     transform: scale(1.1);
 }
-
 /* Settings */
